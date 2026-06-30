@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Buy My Next Car — Widget Demo</title>
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    max-width: 720px;
+    margin: 60px auto;
+    padding: 0 24px;
+    line-height: 1.6;
+    color: #2C3338;
+  }
+  h1 { font-size: 28px; }
+  code {
+    background: #f1f1f1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  pre {
+    background: #1d1d1d;
+    color: #eee;
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+  <h1>Buy My Next Car — Chat Widget Demo</h1>
+  <p>
+    This page demonstrates the embeddable chat widget loaded from the live
+    deployment at <code>buycarbot.omnisuiteai.com</code>. Click the teal
+    button in the bottom-right corner to open it.
+  </p>
+  <p>
+    To embed this on any site, add this before <code>&lt;/body&gt;</code>:
+  </p>
+  <pre>&lt;link rel="stylesheet" href="https://buycarbot.omnisuiteai.com/iife.css"&gt;
+&lt;script src="https://buycarbot.omnisuiteai.com/iife.js"
+        data-api-url="https://buycarbot.omnisuiteai.com"&gt;&lt;/script&gt;</pre>
+  <p>
+    That's it — no other setup needed on the embedding site.
+  </p>
+
+  <!-- Widget embed (production) -->
+  <link rel="stylesheet" href="https://buycarbot.omnisuiteai.com/iife.css" />
+  <script
+    src="https://buycarbot.omnisuiteai.com/iife.js"
+    data-api-url="https://buycarbot.omnisuiteai.com"
+  ></script>
+
+  <!--
+    Testing locally instead? Comment out the two tags above and use:
+
+    <link rel="stylesheet" href="iife.css" />
+    <script src="iife.js" data-api-url="http://localhost:3001"></script>
+  -->
+</body>
+</html>
