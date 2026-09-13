@@ -520,121 +520,6 @@
   stroke-linejoin: round;
 }
 
-/* ── Inline finance consent card ── */
-.bmnc-finance-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  animation: bmnc-fadein .25s ease;
-  /* Align with bot bubble: avatar width (28px) + gap (8px) = 36px */
-  padding-left: 36px;
-}
-
-.bmnc-finance-card-inner {
-  background: var(--bmnc-white);
-  border: 1.5px solid rgba(37,99,235,.18);
-  border-radius: 16px 16px 16px 4px;
-  box-shadow: 0 1px 4px rgba(44,51,56,.08);
-  overflow: hidden;
-}
-
-.bmnc-finance-card-question {
-  font-family: var(--bmnc-font-body);
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--bmnc-charcoal);
-  padding: 12px 14px 6px;
-  line-height: 1.4;
-}
-
-.bmnc-finance-card-body {
-  font-family: var(--bmnc-font-body);
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--bmnc-charcoal-lt);
-  padding: 0 14px 10px;
-}
-
-.bmnc-finance-card-commission {
-  font-family: var(--bmnc-font-body);
-  font-size: 11px;
-  line-height: 1.5;
-  color: rgba(44,51,56,.5);
-  padding: 0 14px 12px;
-}
-
-.bmnc-finance-card-btns {
-  display: flex;
-  gap: 8px;
-  padding: 0 14px 14px;
-}
-
-.bmnc-finance-card-yes {
-  flex: 1;
-  padding: 9px 14px;
-  background: var(--bmnc-teal);
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-  font-family: var(--bmnc-font-body);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--bmnc-white);
-  transition: background .15s;
-  white-space: nowrap;
-}
-
-.bmnc-finance-card-yes:hover { background: var(--bmnc-teal-dark); }
-
-.bmnc-finance-card-no {
-  padding: 9px 14px;
-  background: transparent;
-  border: 1.5px solid rgba(212,201,180,.8);
-  border-radius: 999px;
-  cursor: pointer;
-  font-family: var(--bmnc-font-body);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--bmnc-charcoal-lt);
-  transition: border-color .15s, color .15s;
-  white-space: nowrap;
-}
-
-.bmnc-finance-card-no:hover {
-  border-color: var(--bmnc-charcoal-lt);
-  color: var(--bmnc-charcoal);
-}
-
-.bmnc-finance-card-links {
-  display: flex;
-  gap: 12px;
-  padding: 10px 14px 12px;
-  border-top: 1px solid rgba(212,201,180,.3);
-}
-
-.bmnc-finance-card-links a {
-  font-family: var(--bmnc-font-body);
-  font-size: 10.5px;
-  color: var(--bmnc-teal);
-  text-decoration: underline;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-/* Dismissed state */
-.bmnc-finance-card-inner.bmnc-dismissed {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-.bmnc-finance-card-dismissed-label {
-  font-family: var(--bmnc-font-body);
-  font-size: 11.5px;
-  color: var(--bmnc-charcoal-lt);
-  font-style: italic;
-  padding: 4px 0 0;
-}
-
 /* ── Handover / lead-capture screen ── */
 .bmnc-handover-screen {
   flex: 1;
@@ -769,7 +654,7 @@
   color: var(--bmnc-charcoal);
 }
 
-/* ── Finance referral consent screen (full-screen, for direct CTA access) ── */
+/* ── Finance referral consent screen  ★ NEW ── */
 
 /* Commission disclosure box */
 .bmnc-finance-disclosure {

@@ -15,22 +15,19 @@
 
   var datasetCfg = {};
   if (currentScript) {
-    datasetCfg.apiUrl           = currentScript.getAttribute("data-api-url") || undefined;
-    datasetCfg.autoOpen         = currentScript.getAttribute("data-auto-open") === "true";
-    datasetCfg.position         = currentScript.getAttribute("data-position") || "right";
+    datasetCfg.apiUrl          = currentScript.getAttribute("data-api-url") || undefined;
+    datasetCfg.autoOpen        = currentScript.getAttribute("data-auto-open") === "true";
+    datasetCfg.position        = currentScript.getAttribute("data-position") || "right";
     datasetCfg.privacyPolicyUrl = currentScript.getAttribute("data-privacy-url") || undefined;
-    datasetCfg.financeInfoUrl   = currentScript.getAttribute("data-finance-info-url") || undefined;
   }
 
   var userCfg = window.BMNC_CONFIG || {};
 
   var CONFIG = {
-    apiUrl:          (userCfg.apiUrl || datasetCfg.apiUrl || "").replace(/\/$/, ""),
-    autoOpen:        userCfg.autoOpen !== undefined ? userCfg.autoOpen : !!datasetCfg.autoOpen,
-    position:        userCfg.position || datasetCfg.position || "right",
+    apiUrl: (userCfg.apiUrl || datasetCfg.apiUrl || "").replace(/\/$/, ""),
+    autoOpen: userCfg.autoOpen !== undefined ? userCfg.autoOpen : !!datasetCfg.autoOpen,
+    position: userCfg.position || datasetCfg.position || "right",
     privacyPolicyUrl: userCfg.privacyPolicyUrl || datasetCfg.privacyPolicyUrl || "/privacy-policy",
-    // NEW: URL for the Finance Referral Information page — set via data-finance-info-url or BMNC_CONFIG
-    financeInfoUrl:  userCfg.financeInfoUrl || datasetCfg.financeInfoUrl || "/finance-referral-information",
   };
 
   if (!CONFIG.apiUrl) {
@@ -54,15 +51,14 @@
   };
 
   var FINANCE_PARTNER = {
-    legalName:   "Acquired Financial Services Pty Ltd",
-    tradingAs:   "Acquired Finance",
-    acl:         "488607",
-    phone:       "1300 235 255",
-    website:     "www.acquiredfinance.com",
+    legalName:  "Acquired Financial Services Pty Ltd",
+    tradingAs:  "Acquired Finance",
+    acl:        "488607",
+    phone:      "1300 235 255",
+    website:    "www.acquiredfinance.com",
     lenderPanel: "63+",
   };
 
-  // Full legal consent text — used in the full-screen finance form
   var FINANCE_CONSENT_TEXT =
     "Yes, refer me to Acquired Financial Services. I consent to Test Drive Group Pty Ltd, " +
     "operator of Buy My Next Car, providing my name, telephone number and brief vehicle or " +
@@ -89,9 +85,6 @@
     handoffRequired:  false,
     handoffSubmitted: false,
     handoffCTAShown:  false,
-    // NEW: tracks whether the inline finance consent card has been shown
-    // (so we only show it once per conversation)
-    financeCardShown: false,
     screen:           "lang",
   };
 
@@ -200,6 +193,7 @@
   };
 
   // ── Build widget skeleton ──
+  // FIX: root acts as the scoping container; launcher and win must be children of it
   var root = el("div", { attrs: { "data-bmnc-widget": "" } });
 
   var launcher = el("button", {
@@ -289,8 +283,8 @@
 
   var attachBtn = el("button", {
     className: "bmnc-icon-btn bmnc-attach-btn",
-    attrs:     { type: "button", "aria-label": "Attach photos", title: "Attach photos" },
     html:      ICONS.attach,
+    attrs:     { type: "button", "aria-label": "Attach photos", title: "Attach photos" },
   });
   var fileInput = el("input", {
     attrs: { type: "file", accept: "image/*", multiple: "multiple", style: "display:none;" },
@@ -322,7 +316,7 @@
   // ── Handover / lead-capture screen ──
   var handoverScreen = buildHandoverScreen();
 
-  // ── Finance referral consent screen (full-screen, accessible via header CTA) ──
+  // ── Finance referral consent screen ──
   var financeScreen = buildFinanceScreen();
 
   win.appendChild(header);
@@ -418,9 +412,7 @@
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  // Finance referral consent screen builder (full-screen)
-  // Used when the user explicitly opens via BMNCWidget.compareFinance()
-  // or the header icon, not for the inline card flow.
+  // Finance referral consent screen builder
   // ─────────────────────────────────────────────────────────────────────────
 
   function buildFinanceScreen() {
@@ -514,6 +506,8 @@
   }
 
   // ── Mount once DOM is ready ──
+  // FIX: append launcher AND win as children of root, then root to body.
+  // Previously root was appended empty — launcher and win were never in the DOM.
   function mount() {
     ensureFonts();
     root.appendChild(launcher);
@@ -541,7 +535,6 @@
           handoffRequired:  state.handoffRequired,
           handoffSubmitted: state.handoffSubmitted,
           handoffCTAShown:  state.handoffCTAShown,
-          financeCardShown: state.financeCardShown,
         })
       );
     } catch (e) { /* localStorage unavailable */ }
@@ -560,7 +553,6 @@
         state.handoffRequired  = !!parsed.handoffRequired;
         state.handoffSubmitted = !!parsed.handoffSubmitted;
         state.handoffCTAShown  = !!parsed.handoffCTAShown;
-        state.financeCardShown = !!parsed.financeCardShown;
         renderMessages();
         showChatScreen();
         if (state.handoffRequired && !state.handoffSubmitted && !state.handoffCTAShown) {
@@ -633,177 +625,6 @@
     var returnTo = financeScreen.el.getAttribute("data-return-to") || "chat";
     if (returnTo === "lang") showLangScreen();
     else showChatScreen();
-  }
-
-  // ─────────────────────────────────────────────────────────────────────────
-  // NEW: Inline finance consent card
-  //
-  // Replaces the old verbose block of consent text pasted into the chat.
-  // Shows a clean card with:
-  //   - A short question
-  //   - One-line permission summary
-  //   - [Yes, refer me] [Not now] buttons
-  //   - Commission disclosure note (present but unobtrusive)
-  //   - Links to Privacy Policy and Finance Referral Information
-  //
-  // On "Yes, refer me" → opens the full-screen finance form to collect
-  //   name, phone, and vehicle, with the legal consent checkbox.
-  // On "Not now" → dismisses the card gracefully in-place.
-  // ─────────────────────────────────────────────────────────────────────────
-
-  function appendInlineFinanceCard() {
-    // Only show once per conversation
-    if (state.financeCardShown) return;
-    state.financeCardShown = true;
-
-    var cardWrap  = el("div", { className: "bmnc-finance-card" });
-    var cardInner = el("div", { className: "bmnc-finance-card-inner" });
-
-    // Question
-    cardInner.appendChild(
-      el("p", {
-        className: "bmnc-finance-card-question",
-        text: "Would you like our finance partner to contact you?",
-      })
-    );
-
-    // Permission summary (short, clear)
-    cardInner.appendChild(
-      el("p", {
-        className: "bmnc-finance-card-body",
-        text:
-          "With your permission, " +
-          COMPANY.legalName +
-          ", operator of " +
-          COMPANY.tradingAs +
-          ", will share your name, phone number and brief vehicle or finance enquiry details with " +
-          FINANCE_PARTNER.legalName +
-          " so their broker can contact you.",
-      })
-    );
-
-    // Commission note — present (required disclosure) but understated
-    cardInner.appendChild(
-      el("p", {
-        className: "bmnc-finance-card-commission",
-        text:
-          COMPANY.legalName +
-          " may receive a commission or referral benefit if you proceed.",
-      })
-    );
-
-    // Buttons
-    var btns   = el("div", { className: "bmnc-finance-card-btns" });
-    var yesBtn = el("button", {
-      className: "bmnc-finance-card-yes",
-      attrs:     { type: "button" },
-      text:      "Yes, refer me",
-    });
-    var noBtn  = el("button", {
-      className: "bmnc-finance-card-no",
-      attrs:     { type: "button" },
-      text:      "Not now",
-    });
-    btns.appendChild(yesBtn);
-    btns.appendChild(noBtn);
-    cardInner.appendChild(btns);
-
-    // Links
-    var links = el("div", { className: "bmnc-finance-card-links" });
-    var privacyLink = el("a", {
-      text:  "Privacy Policy",
-      attrs: { href: CONFIG.privacyPolicyUrl, target: "_blank", rel: "noopener noreferrer" },
-    });
-    var financeLink = el("a", {
-      text:  "Finance Referral Information",
-      attrs: { href: CONFIG.financeInfoUrl, target: "_blank", rel: "noopener noreferrer" },
-    });
-    links.appendChild(privacyLink);
-    links.appendChild(financeLink);
-    cardInner.appendChild(links);
-
-    cardWrap.appendChild(cardInner);
-    messagesEl.appendChild(cardWrap);
-    scrollToBottom();
-
-    // ── Button handlers ──
-    yesBtn.addEventListener("click", function () {
-      // Visually lock the card so the user can see their choice was registered
-      cardInner.classList.add("bmnc-dismissed");
-      yesBtn.textContent = "Connecting you…";
-      // Small delay for visual feedback before screen transition
-      setTimeout(function () {
-        showFinanceScreen();
-      }, 300);
-    });
-
-    noBtn.addEventListener("click", function () {
-      cardInner.classList.add("bmnc-dismissed");
-      // Replace buttons with a polite acknowledgement
-      btns.innerHTML = "";
-      links.style.display = "none";
-      var dismissedLabel = el("p", {
-        className: "bmnc-finance-card-dismissed-label",
-        text: "No problem — just let me know if you'd like to explore finance later.",
-      });
-      // Append below the commission note, above the links area
-      cardInner.appendChild(dismissedLabel);
-      scrollToBottom();
-      saveSession();
-
-      // Send a brief message to keep the conversation going
-      sendMessage("No thanks, not right now.", state.language);
-    });
-
-    saveSession();
-  }
-
-  // ─────────────────────────────────────────────────────────────────────────
-  // Detect whether an AI reply is introducing the finance referral.
-  // If so, we suppress the inline consent block the AI would normally include
-  // and replace it with our clean inline card.
-  //
-  // The AI system prompt instructs it to present the consent statement in its
-  // reply. We detect that signal and swap it out for the card, keeping the
-  // introductory text but removing the raw consent paragraph.
-  // ─────────────────────────────────────────────────────────────────────────
-
-  var FINANCE_TRIGGER_PHRASES = [
-    "refer me to acquired",
-    "acquired financial services",
-    "refer you to our broker",
-    "connect you with our broker",
-    "our broker partner",
-    "finance referral",
-    "finance partner",
-    "compare finance",
-  ];
-
-  function containsFinanceTrigger(text) {
-    if (!text) return false;
-    var lower = text.toLowerCase();
-    for (var i = 0; i < FINANCE_TRIGGER_PHRASES.length; i++) {
-      if (lower.indexOf(FINANCE_TRIGGER_PHRASES[i]) !== -1) return true;
-    }
-    return false;
-  }
-
-  // Strip the raw consent statement block from the AI reply text so the card
-  // appears instead. Handles the bolded version the AI produces.
-  function stripConsentBlock(text) {
-    if (!text) return text;
-    // Remove everything from the consent statement opening quote onward
-    // (the AI produces it bold: **"Yes, refer me...**")
-    var patterns = [
-      /\*?\*?"Yes, refer me to Acquired[\s\S]*/i,
-      /Please confirm with the following statement[\s\S]*/i,
-      /could you please confirm with the following[\s\S]*/i,
-    ];
-    var result = text;
-    for (var i = 0; i < patterns.length; i++) {
-      result = result.replace(patterns[i], "").trim();
-    }
-    return result;
   }
 
   // ── Rendering helpers ──
@@ -967,36 +788,15 @@
       })
       .then(function (data) {
         if (data.sessionId) state.sessionId = data.sessionId;
-
-        // ── Finance card injection logic ──
-        // If the AI reply touches finance referral and we haven't shown the
-        // card yet, strip the raw consent block from the reply and show the
-        // clean inline card instead.
-        var replyText = data.message;
-        var shouldShowFinanceCard =
-          !state.financeCardShown &&
-          !state.handoffSubmitted &&
-          containsFinanceTrigger(replyText);
-
-        if (shouldShowFinanceCard) {
-          replyText = stripConsentBlock(replyText);
-        }
-
         var assistantMsg = {
           id:      "assistant-" + Date.now(),
           role:    "assistant",
-          content: replyText,
+          content: data.message,
         };
         state.messages.push(assistantMsg);
         setLoading(false);
         appendMessageEl(assistantMsg);
         scrollToBottom();
-
-        // Append the inline card after the bubble
-        if (shouldShowFinanceCard) {
-          setTimeout(appendInlineFinanceCard, 120);
-        }
-
         handleHandoffFlags(data);
         saveSession();
       })
@@ -1085,9 +885,9 @@
       handoverScreen.errorEl.classList.add("bmnc-visible");
     }
 
-    if (!name)            { showFormError("Please add your name."); return; }
-    if (!phone && !email) { showFormError("Please add a phone number or email so we can reach you."); return; }
-    if (!state.sessionId) { showFormError("Let's chat for a moment first so we have some context to pass on."); return; }
+    if (!name)           { showFormError("Please add your name."); return; }
+    if (!phone && !email){ showFormError("Please add a phone number or email so we can reach you."); return; }
+    if (!state.sessionId){ showFormError("Let's chat for a moment first so we have some context to pass on."); return; }
 
     handoverScreen.errorEl.classList.remove("bmnc-visible");
     handoverScreen.submitBtn.disabled    = true;
@@ -1226,7 +1026,6 @@
     state.handoffRequired   = false;
     state.handoffSubmitted  = false;
     state.handoffCTAShown   = false;
-    state.financeCardShown  = false;
     messagesEl.innerHTML    = "";
     clearSession();
     showLangScreen();
@@ -1300,15 +1099,13 @@
 
   // ── Public API ──
   window.BMNCWidget = {
-    open:                openWidget,
-    close:               closeWidget,
-    toggle:              toggleWidget,
-    reset:               resetConversation,
-    talkToSpecialist:    showHandoverScreen,
-    compareFinance:      showFinanceScreen,
-    appendFinanceCTA:    appendFinanceCTA,
-    // NEW: programmatically show the inline finance consent card
-    showInlineFinanceCard: appendInlineFinanceCard,
+    open:             openWidget,
+    close:            closeWidget,
+    toggle:           toggleWidget,
+    reset:            resetConversation,
+    talkToSpecialist: showHandoverScreen,
+    compareFinance:   showFinanceScreen,
+    appendFinanceCTA: appendFinanceCTA,
   };
 
   // ── Auto-open ──
