@@ -476,6 +476,10 @@
 
     var nameInput    = field("Your name *",  { type: "text", placeholder: "Jane Smith" });
     var phoneInput   = field("Phone *",      { type: "tel",  placeholder: "04xx xxx xxx" });
+    var amountInput  = field("Borrowing Amount (optional)", {
+      type: "text",
+      placeholder: "e.g. $30,000",
+    });
     var vehicleInput = field("Vehicle you're interested in (optional)", {
       type: "text",
       placeholder: "e.g. Toyota RAV4 hybrid",
@@ -506,6 +510,7 @@
       consentCheck: consentCheck,
       nameInput:    nameInput,
       phoneInput:   phoneInput,
+      amountInput:  amountInput,
       vehicleInput: vehicleInput,
       errorEl:      errorEl,
       backBtn:      backBtn,
@@ -624,6 +629,7 @@
     financeScreen.submitBtn.disabled   = true;
     financeScreen.nameInput.value      = "";
     financeScreen.phoneInput.value     = "";
+    financeScreen.amountInput.value    = "";
     financeScreen.vehicleInput.value   = "";
     state.screen = "finance";
     setTimeout(function () { financeScreen.nameInput.focus(); }, 150);
@@ -1134,6 +1140,7 @@
   function submitFinanceReferral() {
     var name    = financeScreen.nameInput.value.trim();
     var phone   = financeScreen.phoneInput.value.trim();
+    var amount  = financeScreen.amountInput.value.trim();
     var vehicle = financeScreen.vehicleInput.value.trim();
 
     function showFormError(msg) {
@@ -1151,7 +1158,9 @@
     financeScreen.submitBtn.textContent = "Submitting...";
 
     var notes =
-      "[Finance referral] Consent given. Vehicle of interest: " +
+      "[Finance referral] Consent given." +
+      (amount ? " Borrowing amount: " + amount + "." : "") +
+      " Vehicle of interest: " +
       (vehicle || "not specified") +
       ". Referred to Acquired Financial Services Pty Ltd (ACL " +
       FINANCE_PARTNER.acl + ").";
