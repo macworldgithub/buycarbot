@@ -552,12 +552,13 @@ async function getAssistantReply(session, language, { nudgeHandoff = false, isSm
     llmMessages.push({ role: "system", content: HANDOFF_NUDGE });
   }
 
-  for (const msg of session.messages.slice(-30)) {
+  const historyLimit = isSms ? -10 : -20;
+  for (const msg of session.messages.slice(historyLimit)) {
     llmMessages.push({ role: msg.role, content: msg.content });
   }
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-4",
+    model: process.env.OPENAI_MODEL || "gpt-4o",
     messages: llmMessages,
     max_tokens: isSms ? 300 : 700,
     temperature: 0.6,
@@ -736,11 +737,32 @@ async function handleInboundSms(req, res) {
     }
 
     for (const item of items) {
+      // Ignore delivery receipts, outbound logs, or status callbacks
+      if (item.type === "outbound" || item.type === "dlr" || item.status || item.event === "delivery_receipt") {
+        console.log(`[SMS Webhook] Ignored status report / delivery event:`, item.status || item.type || item.event);
+        continue;
+      }
+
       const fromNum = item.from;
       const toNum = item.to || MOBILEMESSAGE_FROM;
       const userText = item.message;
 
       if (!fromNum || !userText) continue;
+
+      const cleanFromDigits = fromNum.replace(/[^0-9]/g, "");
+      const cleanToDigits = toNum.replace(/[^0-9]/g, "");
+      const cleanBotDigits = (MOBILEMESSAGE_FROM || "").replace(/[^0-9]/g, "");
+
+      // ── CRITICAL: Prevent Infinite Loop ──────────────────────────────────
+      // If the message is from the bot's own number or sent to itself, ignore.
+      if (cleanBotDigits && cleanFromDigits === cleanBotDigits) {
+        console.warn(`[SMS Webhook] Loop prevented: Ignored message from bot's own number (${fromNum}).`);
+        continue;
+      }
+      if (cleanFromDigits && cleanFromDigits === cleanToDigits) {
+        console.warn(`[SMS Webhook] Loop prevented: Ignored message where sender equals recipient (${fromNum}).`);
+        continue;
+      }
 
       console.log(`[SMS Webhook] Inbound message from ${fromNum} to ${toNum}: "${userText}"`);
 
