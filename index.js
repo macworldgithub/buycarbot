@@ -485,10 +485,10 @@ function getOrCreateSession(incomingId, language) {
     session = sessions.get(sessionId);
     session.updatedAt = new Date();
   } else {
-    sessionId = uuidv4();
+    sessionId = incomingId || uuidv4();
     session = {
       messages: [],
-      language,
+      language: validateLanguage(language),
       uploads: [],
       userTurns: 0,
       handoverRequested: false,
@@ -511,7 +511,7 @@ function recordUserTurn(session) {
  * Fetches the current knowledge base from MongoDB and injects it as a
  * system message so the AI answers from stored content first.
  */
-async function getAssistantReply(session, language, { nudgeHandoff = false } = {}) {
+async function getAssistantReply(session, language, { nudgeHandoff = false, isSms = false } = {}) {
   const llmMessages = [{ role: "system", content: SYSTEM_PROMPT }];
 
   // ── Inject knowledge base from MongoDB ──────────────────────────────────
@@ -536,6 +536,18 @@ async function getAssistantReply(session, language, { nudgeHandoff = false } = {
     });
   }
 
+  if (isSms) {
+    llmMessages.push({
+      role: "system",
+      content:
+        "## SMS Formatting & Tone Guidelines:\n" +
+        "- You are replying via SMS text message to the customer's phone.\n" +
+        "- Keep responses concise, direct, and conversational (1 to 3 short sentences max).\n" +
+        "- Do NOT use markdown syntax (no markdown headers, no bold asterisks, no bullet lists, no markdown links).\n" +
+        "- Keep it natural, warm, and easy to read on a mobile phone screen.",
+    });
+  }
+
   if (nudgeHandoff) {
     llmMessages.push({ role: "system", content: HANDOFF_NUDGE });
   }
@@ -547,7 +559,7 @@ async function getAssistantReply(session, language, { nudgeHandoff = false } = {
   const completion = await openai.chat.completions.create({
     model: "gpt-4",
     messages: llmMessages,
-    max_tokens: 700,
+    max_tokens: isSms ? 300 : 700,
     temperature: 0.6,
   });
 
@@ -629,7 +641,7 @@ async function notifyLeadByEmail(sessionId, session, contact) {
 // SMS Integration (MobileMessage API)
 // ─────────────────────────────────────────────────────────────────────────────
 
-async function sendSms(to, messageText) {
+async function sendSms(to, messageText, senderNumber) {
   if (!SMS_CONFIGURED) {
     console.warn("[SMS] MobileMessage not configured — cannot send SMS.");
     return false;
@@ -637,13 +649,14 @@ async function sendSms(to, messageText) {
 
   const credentials = Buffer.from(`${MOBILEMESSAGE_USERNAME}:${MOBILEMESSAGE_PASSWORD}`).toString("base64");
   const url = "https://api.mobilemessage.com.au/v1/messages";
+  const from = senderNumber || MOBILEMESSAGE_FROM;
 
   const payload = {
     messages: [
       {
         to: to,
         message: messageText,
-        ...(MOBILEMESSAGE_FROM ? { sender: MOBILEMESSAGE_FROM } : {}),
+        ...(from ? { sender: from } : {}),
       },
     ],
   };
@@ -664,7 +677,7 @@ async function sendSms(to, messageText) {
       return false;
     }
 
-    console.log(`[SMS] Reply sent to ${to}: "${messageText.slice(0, 50)}..."`);
+    console.log(`[SMS] Reply sent from "${from || "Default"}" to ${to}: "${messageText.slice(0, 50)}..."`);
     return true;
   } catch (err) {
     console.error("[SMS] Exception calling MobileMessage API:", err?.message || err);
@@ -677,23 +690,41 @@ async function handleInboundSms(req, res) {
     const body = req.body || {};
     const query = req.query || {};
 
-    let items = [];
+    let rawItems = [];
 
-    if (Array.isArray(body.messages)) {
-      items = body.messages;
+    if (Array.isArray(body)) {
+      rawItems = body;
+    } else if (Array.isArray(body.messages)) {
+      rawItems = body.messages;
     } else if (Array.isArray(body.data)) {
-      items = body.data;
+      rawItems = body.data;
+    } else if (Array.isArray(body.events)) {
+      rawItems = body.events;
     } else {
+      rawItems = [body];
+    }
+
+    const items = [];
+    for (const item of rawItems) {
       const from =
-        body.from || body.sender || body.msisdn || body.mobile || body.phone || body.source ||
-        query.from || query.sender || query.msisdn || query.mobile || query.phone;
+        item.from || item.sender || item.msisdn || item.mobile || item.phone || item.source || item.originator ||
+        query.from || query.sender || query.msisdn || query.mobile || query.phone || query.source || query.originator;
+
+      const to =
+        item.to || item.destination || item.recipient || item.dest || item.dest_msisdn || item.message_from ||
+        query.to || query.destination || query.recipient || query.dest || query.dest_msisdn || query.message_from ||
+        MOBILEMESSAGE_FROM;
 
       const message =
-        body.message || body.text || body.content || body.body ||
-        query.message || query.text || query.content || query.body;
+        item.message || item.text || item.content || item.body || item.msg ||
+        query.message || query.text || query.content || query.body || query.msg;
 
       if (from && message) {
-        items = [{ from, message }];
+        items.push({
+          from: String(from).trim(),
+          to: String(to || MOBILEMESSAGE_FROM || "").trim(),
+          message: String(message).trim(),
+        });
       }
     }
 
@@ -705,12 +736,13 @@ async function handleInboundSms(req, res) {
     }
 
     for (const item of items) {
-      const fromNum = String(item.from || item.sender || item.msisdn || item.mobile || item.phone || "").trim();
-      const userText = String(item.message || item.text || item.content || item.body || "").trim();
+      const fromNum = item.from;
+      const toNum = item.to || MOBILEMESSAGE_FROM;
+      const userText = item.message;
 
       if (!fromNum || !userText) continue;
 
-      console.log(`[SMS Webhook] Inbound message from ${fromNum}: "${userText}"`);
+      console.log(`[SMS Webhook] Inbound message from ${fromNum} to ${toNum}: "${userText}"`);
 
       const cleanPhone = fromNum.replace(/[^0-9+]/g, "");
       const smsSessionId = `sms_${cleanPhone}`;
@@ -722,7 +754,7 @@ async function handleInboundSms(req, res) {
           name: `SMS Customer (${cleanPhone})`,
           phone: cleanPhone,
           email: "",
-          notes: "Conversation via MobileMessage SMS",
+          notes: `Conversation via MobileMessage SMS to ${toNum || MOBILEMESSAGE_FROM}`,
           submittedAt: new Date(),
         };
       }
@@ -737,21 +769,29 @@ async function handleInboundSms(req, res) {
       try {
         assistantContent = await getAssistantReply(session, "English", {
           nudgeHandoff: shouldNudgeHandoff,
+          isSms: true,
         });
       } catch (err) {
         console.error("[SMS OpenAI Error]", err?.message || err);
         assistantContent =
-          "Thanks for reaching out! Our team will get back to you shortly.";
+          "Thanks for reaching out to Buy My Next Car! One of our team members will get back to you shortly.";
       }
 
       if (shouldNudgeHandoff) {
         session.handoverRequested = true;
+        if (!session.handoverSubmitted && LEAD_EMAIL_READY) {
+          session.handoverSubmitted = true;
+          notifyLeadByEmail(smsSessionId, session, session.leadContact).catch((e) =>
+            console.error("[SMS Lead Email Error]", e?.message || e)
+          );
+        }
       }
 
       session.messages.push({ role: "assistant", content: assistantContent });
       session.updatedAt = new Date();
 
-      await sendSms(fromNum, assistantContent);
+      // Reply back to user from the number the message was sent to
+      await sendSms(fromNum, assistantContent, toNum || MOBILEMESSAGE_FROM);
     }
 
     return res.json({ success: true, processed: items.length });
@@ -1221,13 +1261,14 @@ app.post("/api/sms/inbound", handleInboundSms);
 app.get("/api/sms/inbound", handleInboundSms);
 
 app.post("/api/sms/send-test", async (req, res) => {
-  const { to, message } = req.body || {};
+  const { to, message, sender } = req.body || {};
   if (!to || !message) {
     return res.status(400).json({ error: "'to' and 'message' fields are required." });
   }
-  const success = await sendSms(to, message);
+  const senderNumber = sender || MOBILEMESSAGE_FROM;
+  const success = await sendSms(to, message, senderNumber);
   if (success) {
-    return res.json({ success: true, message: `SMS sent to ${to}` });
+    return res.json({ success: true, message: `SMS sent to ${to} from ${senderNumber || "Default"}` });
   } else {
     return res.status(500).json({ error: "Failed to send SMS." });
   }
