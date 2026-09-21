@@ -22,6 +22,11 @@
     datasetCfg.financeInfoUrl   = currentScript.getAttribute("data-finance-info-url") || undefined;
   }
 
+  var userCfg =
+    typeof window !== "undefined" && window.BMNC_CONFIG
+      ? window.BMNC_CONFIG
+      : {};
+
   var defaultOrigin =
     typeof window !== "undefined" && window.location && window.location.origin
       ? window.location.origin
