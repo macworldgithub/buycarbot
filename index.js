@@ -1,9 +1,9 @@
 require("dotenv").config();
 
-const dns = require("dns");
-try {
-  dns.setServers(["8.8.8.8", "1.1.1.1"]);
-} catch (_e) {}
+// const dns = require("dns");
+// try {
+//   dns.setServers(["8.8.8.8", "1.1.1.1"]);
+// } catch (_e) {}
 
 const path = require("path");
 const fs = require("fs");
@@ -701,10 +701,10 @@ function renderTranscriptHtml(messages, isCustomerFacing = false) {
         m.role === "assistant"
           ? "Buy My Next Car Concierge"
           : m.role === "system"
-          ? "Internal Note"
-          : isCustomerFacing
-          ? "You"
-          : "Customer";
+            ? "Internal Note"
+            : isCustomerFacing
+              ? "You"
+              : "Customer";
       const bg =
         m.role === "assistant" ? "#F0FDFA" : m.role === "system" ? "#F3F4F6" : "#F8FAFC";
       const border =
@@ -794,8 +794,8 @@ async function sendCustomerConfirmationEmail(sessionId, session, contact, isFina
         <p style="font-size: 15px; margin-top: 0;">Hi <strong>${escapeHtml(customerName)}</strong>,</p>
         <p style="font-size: 14px;">Thanks for chatting with <strong>Buy My Next Car</strong>! We've received your enquiry details.</p>
         <p style="font-size: 14px;">${isFinanceUpdate
-          ? "We have recorded your interest in finance. Our broker partner, <strong>Acquired Financial Services Pty Ltd</strong> (ACL 488607), will be in touch shortly to discuss competitive rates and repayment options across their panel of 63+ lenders."
-          : "Our vehicle specialists are now reaching out to our dealer network across Australia to find you the best competitive pricing and deals."}</p>
+      ? "We have recorded your interest in finance. Our broker partner, <strong>Acquired Financial Services Pty Ltd</strong> (ACL 488607), will be in touch shortly to discuss competitive rates and repayment options across their panel of 63+ lenders."
+      : "Our vehicle specialists are now reaching out to our dealer network across Australia to find you the best competitive pricing and deals."}</p>
 
         <div style="background: #F8FAFC; border-left: 4px solid #0f4c5c; padding: 14px 16px; border-radius: 6px; margin: 18px 0;">
           <h4 style="margin: 0 0 8px; color: #0f4c5c; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Your Details on File</h4>
