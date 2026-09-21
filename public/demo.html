@@ -47,18 +47,8 @@
     That's it — no other setup needed on the embedding site.
   </p>
 
-  <!-- Widget embed (production) -->
-  <link rel="stylesheet" href="https://buycarbot.omnisuiteai.com/iife.css" />
-  <script
-    src="https://buycarbot.omnisuiteai.com/iife.js"
-    data-api-url="https://buycarbot.omnisuiteai.com"
-  ></script>
-
-  <!--
-    Testing locally instead? Comment out the two tags above and use:
-
-    <link rel="stylesheet" href="iife.css" />
-    <script src="iife.js" data-api-url="http://localhost:3001"></script>
-  -->
+  <!-- Widget embed (relative URL works for both localhost and production domain) -->
+  <link rel="stylesheet" href="/iife.css" />
+  <script src="/iife.js"></script>
 </body>
 </html>

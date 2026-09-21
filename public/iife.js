@@ -22,10 +22,13 @@
     datasetCfg.financeInfoUrl   = currentScript.getAttribute("data-finance-info-url") || undefined;
   }
 
-  var userCfg = window.BMNC_CONFIG || {};
+  var defaultOrigin =
+    typeof window !== "undefined" && window.location && window.location.origin
+      ? window.location.origin
+      : "";
 
   var CONFIG = {
-    apiUrl:          (userCfg.apiUrl || datasetCfg.apiUrl || "").replace(/\/$/, ""),
+    apiUrl:          (userCfg.apiUrl || datasetCfg.apiUrl || defaultOrigin).replace(/\/$/, ""),
     autoOpen:        userCfg.autoOpen !== undefined ? userCfg.autoOpen : !!datasetCfg.autoOpen,
     position:        userCfg.position || datasetCfg.position || "right",
     privacyPolicyUrl: userCfg.privacyPolicyUrl || datasetCfg.privacyPolicyUrl || "/privacy-policy",
@@ -476,6 +479,7 @@
 
     var nameInput    = field("Your name *",  { type: "text", placeholder: "Jane Smith" });
     var phoneInput   = field("Phone *",      { type: "tel",  placeholder: "04xx xxx xxx" });
+    var emailInput   = field("Email (optional — to receive chat summary)", { type: "email", placeholder: "jane@example.com" });
     var amountInput  = field("Borrowing Amount (optional)", {
       type: "text",
       placeholder: "e.g. $30,000",
@@ -510,6 +514,7 @@
       consentCheck: consentCheck,
       nameInput:    nameInput,
       phoneInput:   phoneInput,
+      emailInput:   emailInput,
       amountInput:  amountInput,
       vehicleInput: vehicleInput,
       errorEl:      errorEl,
@@ -1140,6 +1145,7 @@
   function submitFinanceReferral() {
     var name    = financeScreen.nameInput.value.trim();
     var phone   = financeScreen.phoneInput.value.trim();
+    var email   = financeScreen.emailInput ? financeScreen.emailInput.value.trim() : "";
     var amount  = financeScreen.amountInput.value.trim();
     var vehicle = financeScreen.vehicleInput.value.trim();
 
@@ -1172,7 +1178,7 @@
         sessionId: state.sessionId,
         name:      name,
         phone:     phone,
-        email:     "",
+        email:     email,
         notes:     notes,
       }),
     })
