@@ -32,12 +32,22 @@
       ? window.location.origin
       : "";
 
+  var scriptOrigin = (function () {
+    try {
+      if (currentScript && currentScript.src) {
+        var u = new URL(currentScript.src);
+        if (u.origin && u.origin !== "null") return u.origin;
+      }
+    } catch (_e) {}
+    return defaultOrigin;
+  })();
+
   var CONFIG = {
-    apiUrl:          (userCfg.apiUrl || datasetCfg.apiUrl || defaultOrigin).replace(/\/$/, ""),
+    apiUrl:          (userCfg.apiUrl || datasetCfg.apiUrl || scriptOrigin || defaultOrigin).replace(/\/$/, ""),
     autoOpen:        userCfg.autoOpen !== undefined ? userCfg.autoOpen : !!datasetCfg.autoOpen,
     position:        userCfg.position || datasetCfg.position || "right",
     privacyPolicyUrl: userCfg.privacyPolicyUrl || datasetCfg.privacyPolicyUrl || "/privacy-policy",
-    // NEW: URL for the Finance Referral Information page — set via data-finance-info-url or BMNC_CONFIG
+    // URL for the Finance Referral Information page — set via data-finance-info-url or BMNC_CONFIG
     financeInfoUrl:  userCfg.financeInfoUrl || datasetCfg.financeInfoUrl || "/finance-referral-information",
   };
 
@@ -984,19 +994,12 @@
       .then(function (data) {
         if (data.sessionId) state.sessionId = data.sessionId;
 
-        // ── Finance card injection logic ──
-        // If the AI reply touches finance referral and we haven't shown the
-        // card yet, strip the raw consent block from the reply and show the
-        // clean inline card instead.
+        // ── Conversational chat rendering ──
+        // Do NOT auto-inject inline finance cards or strip content from the AI reply.
+        // The conversation is handled naturally by the AI Concierge in chat without
+        // unexpected pop-up cards or interrupting the user.
         var replyText = data.message;
-        var shouldShowFinanceCard =
-          !state.financeCardShown &&
-          !state.handoffSubmitted &&
-          containsFinanceTrigger(replyText);
-
-        if (shouldShowFinanceCard) {
-          replyText = stripConsentBlock(replyText);
-        }
+        var shouldShowFinanceCard = false;
 
         var assistantMsg = {
           id:      "assistant-" + Date.now(),
@@ -1008,7 +1011,7 @@
         appendMessageEl(assistantMsg);
         scrollToBottom();
 
-        // Append the inline card after the bubble
+        // Optional programmatic/manual finance card only
         if (shouldShowFinanceCard) {
           setTimeout(appendInlineFinanceCard, 120);
         }

@@ -291,8 +291,8 @@ Guide them through: new or used? → vehicle type/brand/model? → intended use 
 **CRITICAL RULE: DO NOT PUSH OR CHASE FINANCE UNLESS REQUESTED**
 - Buy My Next Car is first and foremost a car-buying and dealer-sourcing concierge.
 - When a customer asks about getting the best deal, finding a car, vehicle pricing, specs, trims, trade-ins, or how Buy My Next Car works, KEEP THE CONVERSATION 100% FOCUSED ON THE CAR AND DEALER SOURCING.
-- NEVER proactively bring up finance, ask if they want finance, or dump finance commission disclosures unless the customer EXPLICITLY asks about finance, repayments, borrowing, interest rates, or loans.
-- Answering "how does getting the best deal work" must explain dealer sourcing and vehicle options, NOT chase finance or append finance partner disclosures.
+- NEVER proactively bring up finance, never ask if they want finance, and NEVER dump finance commission disclosures or finance partner details unless the customer EXPLICITLY asks about finance, repayments, borrowing, interest rates, or loans.
+- Specifically, if asked "how does getting the best deal work?" or "how do you help find deals?": explain how we gather their vehicle preferences, model, options, and budget, and negotiate directly across our nationwide Australian dealer network to source competitive pricing. DO NOT mention finance referrals, do NOT ask if they want a finance partner to contact them, and do NOT attach any disclaimers!
 
 **What Buy My Next Car is:** A finance referrer only. We do NOT provide credit assistance, assess creditworthiness, recommend a particular lender or credit product, or approve finance.
 
@@ -326,13 +326,14 @@ Guide them through: new or used? → vehicle type/brand/model? → intended use 
    - Introduce our partner: "Our broker partner is **Acquired Financial Services Pty Ltd** (ACL ${FINANCE_PARTNER.acl}), trading as Acquired Finance, who compare options from over ${FINANCE_PARTNER.lenderPanel} bank and non-bank lenders to find competitive rates and repayments tailored to your situation."
    - Disclose the referral benefit transparently: "Test Drive Group may receive a commission or referral benefit if you proceed with finance arranged by Acquired Finance."
    - Ask simply: "Would you like me to connect you with an Acquired Finance broker for an obligation-free discussion about repayments and options?"
-3. **CRITICAL — STRICTLY NO COPY-PASTE CONSENT**:
-   - NEVER ask the customer to copy-and-paste, repeat, or type out any formal consent declaration, legal statement, or testimonial paragraph.
-   - When the customer says "yes", "sure", "sounds good", "please do", "okay", or provides their contact details for finance, that affirmative answer IS their consent.
-   - Acknowledge their confirmation warmly: "Great, I'll pass your contact details and vehicle enquiry over to Acquired Finance and their broker will be in touch shortly."
-4. **Collect / Use Details**:
-   - If you already have their name and phone/email from earlier in the chat, reuse those details. Do not ask for them again.
-   - If not yet provided, collect their name, phone number (or email), and vehicle of interest. Nothing else.
+3. **CRITICAL — STRICTLY NO COPY-PASTE CONSENT / TESTIMONIAL**:
+   - NEVER, UNDER ANY CIRCUMSTANCES, ask the customer to copy-and-paste, repeat, confirm, or type out any formal consent declaration, legal statement, disclaimer, or testimonial paragraph.
+   - NEVER provide a quote block or text in quotation marks asking them to agree or confirm with that wording.
+   - When the customer gives a natural affirmative answer (e.g. "sure", "yes", "sounds good", "please do", "okay", "yeah", "proceed"), or provides their contact details for finance, that natural response IS their full consent.
+   - Acknowledge their confirmation warmly and naturally: e.g., "Thanks [Name], I'll pass your enquiry and contact details over to Acquired Finance so their broker can reach out to you with competitive options and repayments."
+4. **Reuse Existing Contact Details**:
+   - If you already have their name and phone/email from earlier in the chat, REUSE THOSE DETAILS. DO NOT ask for them again!
+   - If not yet provided, politely collect their name, phone number (or email), and vehicle of interest. Nothing else.
 
 ### Finance complaints routing
 - Complaints about the referral process, consent, or privacy → **Test Drive Group Pty Ltd** at ${COMPANY.email} or ${COMPANY.phone}
@@ -601,7 +602,9 @@ function extractVehicleInterest(session) {
         /(?:Sealion\s?7|BYD\s?Sealion\s?7|AWD\s?Sealion\s?7|Toyota\s?[A-Za-z0-9]+|RAV4|Hilux|Corolla|Camry|Ford\s?Ranger|Mazda\s?CX-[0-9]+|Kia\s?[A-Za-z0-9]+|Hyundai\s?[A-Za-z0-9]+|Tesla\s?Model\s?[3YSE])/i
       );
     if (vMatch) {
-      return vMatch[1] ? vMatch[1].trim() : vMatch[0].trim();
+      let raw = vMatch[1] ? vMatch[1].trim() : vMatch[0].trim();
+      raw = raw.replace(/\s*(?:you're interested in|you are interested in|you're after|you are after|that fits your needs|you want)\s*$/i, "").trim();
+      return raw || "Vehicle Enquiry";
     }
   }
   return "Vehicle Enquiry";
@@ -610,16 +613,16 @@ function extractVehicleInterest(session) {
 function detectFinanceReferralConsent(userMsg, lastAssistantMsg) {
   if (!userMsg || !lastAssistantMsg) return false;
   const assistantAskedFinance =
-    /(?:finance partner|finance broker|Acquired Finance|Acquired Financial|broker to contact you|arrange for a finance broker|set that up for you|connect you with)/i.test(
+    /(?:finance partner|finance broker|Acquired Finance|Acquired Financial|broker to contact you|arrange for a finance broker|set that up for you|connect you with|arrange that for you|obligation-free|repayments and options|discuss finance options|chat with a broker)/i.test(
       lastAssistantMsg
     );
   if (!assistantAskedFinance) return false;
 
   const affirmative =
-    /^(?:sure|yes|yeah|yep|please|yes please|ok|okay|sounds good|go ahead|proceed|certainly|do that|yes do that|yes refer me)[\s.!,]*$/i.test(
+    /^(?:sure|yes|yeah|yep|yup|please|yes please|ok|okay|sounds good|go ahead|proceed|certainly|do that|yes do that|yes refer me|definitely|absolutely)[\s.!,]*$/i.test(
       userMsg.trim()
     ) ||
-    /\b(?:yes please|go ahead|sounds good|refer me|connect me|that would be great)\b/i.test(userMsg);
+    /\b(?:yes please|go ahead|sounds good|refer me|connect me|that would be great|set that up|i would like that|let's do that)\b/i.test(userMsg);
 
   return affirmative;
 }
@@ -725,17 +728,18 @@ async function notifyLeadByEmail(sessionId, session, contact, isFinanceUpdate = 
     return;
   }
 
+  const isFinance = isFinanceUpdate || !!session.financeReferralConsented;
   const vehicle = extractVehicleInterest(session);
-  const title = isFinanceUpdate ? "★ Finance Referral Consent Received" : "New Chat Lead";
-  const subject = isFinanceUpdate
-    ? `★ Finance Referral Consent — Buy My Next Car — ${contact.name}`
+  const title = isFinance ? "★ Finance Referral Consent Received" : "New Chat Lead";
+  const subject = isFinance
+    ? `★ Finance Referral Consent — Buy My Next Car — ${contact.name}${vehicle !== "Vehicle Enquiry" ? ` (${vehicle})` : ""}`
     : `New lead — Buy My Next Car — ${contact.name}${vehicle !== "Vehicle Enquiry" ? ` (${vehicle})` : ""}`;
 
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:640px;color:#2C3338;">
       <h2 style="color:#0F766E;margin-top:0;">${title}</h2>
       <p style="color:#6B7280;font-size:13px;">Session ${escapeHtml(sessionId)} · ${escapeHtml(session.language || "English")}</p>
-      ${isFinanceUpdate ? '<div style="background:#FEF3C7;border-left:4px solid #F59E0B;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;"><strong>Finance Consent:</strong> Customer agreed to be contacted by Acquired Financial Services Pty Ltd (ACL 488607).</div>' : ''}
+      ${isFinance ? '<div style="background:#FEF3C7;border-left:4px solid #F59E0B;padding:10px 14px;border-radius:4px;margin:12px 0;font-size:13px;"><strong>Finance Consent:</strong> Customer agreed to be contacted by Acquired Financial Services Pty Ltd (ACL 488607).</div>' : ''}
       <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;">
         <tr><td style="padding:5px 0;font-weight:600;width:120px;color:#64748B;">Name</td><td style="font-weight:600;">${escapeHtml(contact.name)}</td></tr>
         <tr><td style="padding:5px 0;font-weight:600;color:#64748B;">Phone</td><td>${escapeHtml(contact.phone || "—")}</td></tr>
@@ -779,9 +783,10 @@ async function sendCustomerConfirmationEmail(sessionId, session, contact, isFina
     return false;
   }
 
+  const isFinance = isFinanceUpdate || !!session.financeReferralConsented;
   const customerName = contact.name || "there";
   const vehicle = extractVehicleInterest(session);
-  const subject = isFinanceUpdate
+  const subject = isFinance
     ? `Your finance enquiry update & chat summary — Buy My Next Car`
     : `Your vehicle enquiry & chat summary — Buy My Next Car`;
 
@@ -789,13 +794,13 @@ async function sendCustomerConfirmationEmail(sessionId, session, contact, isFina
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 640px; margin: 0 auto; color: #2C3338; line-height: 1.6;">
       <div style="background: linear-gradient(135deg, #0f4c5c, #0a313d); padding: 26px 22px; border-radius: 10px 10px 0 0; color: #ffffff; text-align: center;">
         <h1 style="margin: 0 0 6px; font-size: 22px; font-weight: 700; letter-spacing: -0.3px;">Buy My Next Car</h1>
-        <p style="margin: 0; font-size: 14px; color: #e0f2f1;">${isFinanceUpdate ? "Finance Enquiry & Chat Summary" : "Vehicle Enquiry & Chat Summary"}</p>
+        <p style="margin: 0; font-size: 14px; color: #e0f2f1;">${isFinance ? "Finance Enquiry & Chat Summary" : "Vehicle Enquiry & Chat Summary"}</p>
       </div>
 
       <div style="border: 1px solid #E5E7EB; border-top: none; border-radius: 0 0 10px 10px; padding: 24px 20px; background: #ffffff;">
         <p style="font-size: 15px; margin-top: 0;">Hi <strong>${escapeHtml(customerName)}</strong>,</p>
         <p style="font-size: 14px;">Thanks for chatting with <strong>Buy My Next Car</strong>! We've received your enquiry details.</p>
-        <p style="font-size: 14px;">${isFinanceUpdate
+        <p style="font-size: 14px;">${isFinance
       ? "We have recorded your interest in finance. Our broker partner, <strong>Acquired Financial Services Pty Ltd</strong> (ACL 488607), will be in touch shortly to discuss competitive rates and repayment options across their panel of 63+ lenders."
       : "Our vehicle specialists are now reaching out to our dealer network across Australia to find you the best competitive pricing and deals."}</p>
 
@@ -1358,11 +1363,13 @@ app.post("/api/chat/message", async (req, res) => {
   // Trigger after assistant response is added so the full conversation transcript is sent
   if (session.leadContact && (session.leadContact.email || session.leadContact.phone)) {
     session.handoverSubmitted = true;
+    const isFinance = !!session.financeReferralConsented;
 
     // 1. Notify team / admin via email
     if (!session.leadEmailSent) {
       session.leadEmailSent = true;
-      notifyLeadByEmail(sessionId, session, session.leadContact).catch((e) =>
+      if (isFinance) session.financeEmailSent = true;
+      notifyLeadByEmail(sessionId, session, session.leadContact, isFinance).catch((e) =>
         console.error("[Mail Lead Error]", e?.message || e)
       );
     }
@@ -1370,15 +1377,22 @@ app.post("/api/chat/message", async (req, res) => {
     // 2. Send customer confirmation email with full chat history
     if (session.leadContact.email && !session.customerEmailSent) {
       session.customerEmailSent = true;
-      sendCustomerConfirmationEmail(sessionId, session, session.leadContact).catch((e) =>
+      sendCustomerConfirmationEmail(sessionId, session, session.leadContact, isFinance).catch((e) =>
         console.error("[Mail Customer Error]", e?.message || e)
       );
     }
   }
 
   // ── Detect if customer gave finance referral consent in this turn ──────────
-  // Check previous assistant message to see if it offered finance referral
-  const previousAssistantMsg = session.messages[session.messages.length - 3]?.content || "";
+  // Find the last assistant message before the current assistant reply
+  let previousAssistantMsg = "";
+  for (let i = session.messages.length - 2; i >= 0; i--) {
+    if (session.messages[i].role === "assistant") {
+      previousAssistantMsg = session.messages[i].content;
+      break;
+    }
+  }
+
   if (detectFinanceReferralConsent(message, previousAssistantMsg)) {
     session.financeReferralConsented = true;
     if (session.leadContact && !session.financeEmailSent) {
