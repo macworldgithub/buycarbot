@@ -46,7 +46,7 @@
     apiUrl:          (userCfg.apiUrl || datasetCfg.apiUrl || scriptOrigin || defaultOrigin).replace(/\/$/, ""),
     autoOpen:        userCfg.autoOpen !== undefined ? userCfg.autoOpen : !!datasetCfg.autoOpen,
     position:        userCfg.position || datasetCfg.position || "right",
-    privacyPolicyUrl: userCfg.privacyPolicyUrl || datasetCfg.privacyPolicyUrl || "/privacy-policy",
+    privacyPolicyUrl: userCfg.privacyPolicyUrl || datasetCfg.privacyPolicyUrl || "https://lightgrey-hyena-663829.hostingersite.com/privacy-policy/",
     // URL for the Finance Referral Information page — set via data-finance-info-url or BMNC_CONFIG
     financeInfoUrl:  userCfg.financeInfoUrl || datasetCfg.financeInfoUrl || "/finance-referral-information",
   };
