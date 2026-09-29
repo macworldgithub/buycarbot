@@ -553,6 +553,89 @@
     mount();
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // Fix navigation links on policy & inner pages (e.g. /privacy-policy/)
+  //
+  // On pages like /privacy-policy/, menu links like href="#about", href="#works",
+  // href="#testimonials", href="#faq" fail because those sections only exist on the
+  // home page. This intercepts those anchor clicks, navigates to the home page
+  // with the hash, and proactively rewrites in-page hrefs.
+  // ─────────────────────────────────────────────────────────────────────────
+  function fixNavigationLinks() {
+    function getRootUrl() {
+      return (window.location.origin || "") + "/";
+    }
+
+    function isInnerPage() {
+      var p = window.location.pathname || "";
+      return p !== "/" && p !== "" && !/^\/index\.(html|php)$/i.test(p);
+    }
+
+    // Intercept clicks on links pointing to an anchor that does not exist on this page
+    document.addEventListener(
+      "click",
+      function (e) {
+        var a = e.target.closest ? e.target.closest("a") : null;
+        if (!a) return;
+        var href = a.getAttribute("href") || "";
+        if (!href || href === "#") return;
+
+        // Ignore Elementor modal actions, Fluent Forms, and javascript: links
+        if (
+          href.indexOf("#elementor-action") === 0 ||
+          href.indexOf("#fluentform") === 0 ||
+          href.indexOf("javascript:") === 0
+        ) {
+          return;
+        }
+
+        if (href.charAt(0) === "#") {
+          var targetId = href.slice(1);
+          var exists = document.getElementById(targetId) || document.querySelector(href);
+          if (!exists) {
+            // Anchor element doesn't exist on this inner page — navigate to home page with hash!
+            e.preventDefault();
+            e.stopPropagation();
+            window.location.href = getRootUrl() + href;
+          }
+        }
+      },
+      true // capture phase: run before any other script/library prevents default
+    );
+
+    // Proactively rewrite href on inner pages for SEO, status bar preview, and right-click "Open in new tab"
+    function patchHrefs() {
+      if (!isInnerPage()) return;
+      var links = document.querySelectorAll('a[href^="#"]');
+      for (var i = 0; i < links.length; i++) {
+        var a = links[i];
+        var href = a.getAttribute("href") || "";
+        if (!href || href === "#") continue;
+        if (
+          href.indexOf("#elementor-action") === 0 ||
+          href.indexOf("#fluentform") === 0 ||
+          href.indexOf("javascript:") === 0
+        ) {
+          continue;
+        }
+        var targetId = href.slice(1);
+        if (!document.getElementById(targetId)) {
+          a.setAttribute("href", getRootUrl() + href);
+        }
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", patchHrefs);
+    } else {
+      patchHrefs();
+    }
+    setTimeout(patchHrefs, 1500);
+  }
+
+  // Activate navigation link fix
+  fixNavigationLinks();
+
   // ── Persistence ──
   function saveSession() {
     if (!state.sessionId || state.messages.length === 0) return;
@@ -615,6 +698,7 @@
     chatScreen.classList.remove("bmnc-hidden");
     chatScreen.style.display = "flex";
     specialistBtn.classList.remove("bmnc-hidden");
+    setTimeout(function () { inputEl.focus(); }, 100);
   }
 
   function showLangScreen() {
@@ -935,18 +1019,24 @@
 
   function setLoading(loading) {
     state.isLoading     = loading;
-    inputEl.disabled    = loading || state.isUploading;
     inputEl.placeholder = loading ? "Thinking..." : "Type your message...";
     attachBtn.disabled  = loading || state.isUploading;
     updateSendEnabled();
     headerStatus.textContent = loading ? "Thinking..." : TAGLINE;
-    if (loading) showTyping();
-    else hideTyping();
+    if (loading) {
+      showTyping();
+    } else {
+      hideTyping();
+      setTimeout(function () {
+        if (state.open && state.screen === "chat") {
+          inputEl.focus();
+        }
+      }, 30);
+    }
   }
 
   function setUploading(uploading) {
     state.isUploading  = uploading;
-    inputEl.disabled   = uploading || state.isLoading;
     attachBtn.disabled = uploading || state.isLoading;
     updateSendEnabled();
     if (uploading) {
@@ -955,6 +1045,11 @@
     } else if (!state.isLoading) {
       headerStatus.textContent = TAGLINE;
       hideTyping();
+      setTimeout(function () {
+        if (state.open && state.screen === "chat") {
+          inputEl.focus();
+        }
+      }, 30);
     }
   }
 
@@ -1018,6 +1113,12 @@
 
         handleHandoffFlags(data);
         saveSession();
+
+        setTimeout(function () {
+          if (state.open && state.screen === "chat") {
+            inputEl.focus();
+          }
+        }, 50);
       })
       .catch(function (err) {
         console.error("[BMNC Widget] Send failed:", err);
@@ -1031,6 +1132,11 @@
         appendMessageEl(errorMsg);
         scrollToBottom();
         showError("Connection issue — please try again.");
+        setTimeout(function () {
+          if (state.open && state.screen === "chat") {
+            inputEl.focus();
+          }
+        }, 50);
       });
   }
 
@@ -1261,7 +1367,7 @@
     launcher.classList.remove("bmnc-has-unread");
     launcher.classList.add("bmnc-launcher-hidden");
     if (!state.showLanguageSelect) {
-      setTimeout(function () { inputEl.focus(); }, 350);
+      setTimeout(function () { inputEl.focus(); }, 200);
     }
   }
 
@@ -1290,9 +1396,18 @@
 
   inputEl.addEventListener("input", updateSendEnabled);
   inputEl.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") handleSend();
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSend();
+    }
   });
   sendBtn.addEventListener("click", handleSend);
+
+  inputBar.addEventListener("click", function (e) {
+    if (e.target !== attachBtn && e.target !== sendBtn) {
+      inputEl.focus();
+    }
+  });
 
   attachBtn.addEventListener("click", function () {
     if (state.isLoading || state.isUploading) return;
@@ -1307,8 +1422,9 @@
     var text = inputEl.value.trim();
     if (!text || state.isLoading || state.isUploading) return;
     inputEl.value      = "";
-    sendBtn.disabled   = true;
+    updateSendEnabled();
     sendMessage(text);
+    inputEl.focus();
   }
 
   // ── Position override ──

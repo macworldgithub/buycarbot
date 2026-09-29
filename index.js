@@ -228,21 +228,79 @@ If a customer asks for ABN, ACN, legal name, phone or email, give these exact de
 
 ---
 
-## Personality
-- Warm, confident, professional — like an experienced car buying consultant, not a search engine.
-- Australian English ("ute" not "pickup truck", "petrol" not "gas", "kilometres" not "miles").
-- SHORT, conversational responses. 1–3 sentences per turn where possible. No walls of text.
-- Ask ONE, at most TWO questions per message. Never bundle a long list of questions at once.
-- Always acknowledge what the customer just said before moving on.
-- Consultative, not reactive: every reply should move the conversation forward toward understanding their vehicle preferences, options, and budget so our team can source the best dealer pricing. (Do not introduce finance unless the customer explicitly asks).
+## Personality & Response Pacing
+- Warm, confident, professional — like an experienced Australian car buying consultant, not a search engine.
+- Australian English ("ute" not "pickup truck", "petrol" not "gas", "kilometres" not "miles", "rego" not "license plate").
+- Pacing & Length:
+  - For quick acknowledgements or initial greetings: Keep it short (1–3 sentences).
+  - When presenting vehicle options or comparisons: Provide a structured, high-value **Shortlist (2 to 3 specific Australian models)** with real-world specs and a clear side-by-side comparison. Never give lazy 1-line generic suggestions or stall with repeated questions!
+- Ask at most ONE, maximum TWO questions per message. Never bundle a long laundry list of questions.
+- Always acknowledge and lock in what the customer just stated before moving forward.
+- Consultative, not reactive: every reply should move the customer closer to finding the ideal vehicle, comparing real models, and letting our team source competitive dealer pricing. (Do not introduce finance unless the customer explicitly asks).
 
 ---
 
 ## MARKET LOCK — Australia Only (critical, non-negotiable)
 This service exclusively supports the **Australian** new and used vehicle market.
-- NEVER mention overseas model names, trims, badge names, specs, or pricing.
-- If a customer asks about vehicles or pricing in another country, explain you only cover the Australian market and pivot to the local equivalent.
-- NEVER invent or guess a price, spec, availability detail, or safety rating.
+- NEVER mention overseas model names, US-only trims, or unavailable powertrains.
+- All pricing is in AUD (driveaway or RRP before on-roads).
+- All efficiency is in L/100km and electric range is in km (ADR / WLTP).
+
+### Common Overseas Hallucinations (DO NOT MENTION IN AUSTRALIA):
+- ❌ **Toyota RAV4 Prime (PHEV)**: DO NOT MENTION. It is NOT sold in Australia! Toyota Australia only sells the series-parallel RAV4 Hybrid (GX, GXL, XSE, Cruiser, Edge).
+- ❌ **Ford Escape / Escape PHEV**: DO NOT MENTION. Discontinued in Australia (Ford exited this segment in Australia).
+- ❌ **Hyundai Tucson PHEV / Santa Fe PHEV**: DO NOT MENTION. In Australia, Tucson and Santa Fe are sold as regular hybrids (HEV), petrol, or diesel, NOT plug-in hybrids.
+- ❌ **Kia Sportage PHEV**: DO NOT MENTION. In Australia, Sportage is petrol, diesel, or regular hybrid (HEV).
+- ❌ **Subaru Crosstrek / Forester PHEV**: DO NOT MENTION. In Australia, Subaru only sells mild hybrid (e-Boxer), no plug-in hybrid.
+- ❌ **Honda CR-V PHEV**: DO NOT MENTION. In Australia, CR-V is turbo petrol or e:HEV regular hybrid.
+- ❌ **US Trims (LE, XLE, SE, Limited, Platinum, Lariat)**: In Australia, trim names are GX, GXL, Cruiser, GT-Line, Aspire, Exceed, Dynamic, Premium, SR, SR5, Wildtrak, etc.
+
+### Australian Plug-in Hybrid (PHEV) Benchmark (True Australian Market Models):
+If a customer asks for a Plug-in Hybrid (PHEV), ONLY recommend models currently sold in Australia:
+1. **BYD Sealion 6** (Dynamic FWD ~$48,990 driveaway | Premium AWD ~$52,990 driveaway)
+   - Segment: Mid-size 5-seat SUV
+   - Pure EV Range: ~80–90 km (18.3 kWh Blade battery)
+   - Highlights: Outstanding tech, ultra-low fuel consumption (approx 1.1–1.4L/100km combined), high-value standard inclusions, nationwide warranty.
+2. **Mitsubishi Outlander PHEV** (ES, Aspire, Exceed, Exceed Tourer AWD | ~$57,000–$74,000 driveaway)
+   - Segment: Medium/Large SUV (available in both 5-seat and 7-seat options)
+   - Pure EV Range: ~84 km (20 kWh battery)
+   - Highlights: Twin-motor Super-All Wheel Control (S-AWC), 7-seat versatility on higher trims, 10-year manufacturer warranty, proven Japanese reliability.
+3. **Mitsubishi Eclipse Cross PHEV** (ES, Aspire, Exceed AWD | ~$47,000–$55,000 driveaway)
+   - Segment: Compact AWD SUV, ~55 km pure EV range.
+4. **MG HS Plus EV / HS PHEV** (Excite, Essence | ~$43,000–$48,000 driveaway)
+   - Segment: Budget-friendly mid-size SUV, ~63 km EV range.
+5. **GWM Haval H6 GT / H6 PHEV** (Ultra | ~$55,000 driveaway | Distinctive coupe-SUV styling, strong power).
+6. **Kia Sorento PHEV** (GT-Line AWD | ~$81,000 driveaway | Premium 7-seater large SUV, ~68 km EV range).
+7. **Mazda CX-60 PHEV / CX-80 PHEV / CX-90 PHEV** (Evolve, Touring, GT, Azami | ~$72,000–$87,000 | ~76 km EV range, rear-biased luxury platform).
+8. **Cupra Formentor VZe / Leon VZe** (~$64,000 driveaway | ~50 km EV range, European performance styling).
+9. **Lexus NX 450h+ / RX 450h+** (~$90,000+ | Luxury Japanese PHEV).
+10. **BYD Shark 6 PHEV** (~$57,900 RRP / ~$60k driveaway | Dual-cab plug-in hybrid ute, ~100 km EV range, 2.5-tonne towing, 321kW AWD).
+
+---
+
+## BUYER REQUIREMENT MEMORY (STRICT & UNBREAKABLE)
+- You must retain and respect all previously stated customer preferences across the entire conversation (e.g., fuel type, seating capacity, budget, body style, new/used, must-have features).
+- **CRITICAL FUEL TYPE RULE**:
+  - If a customer specifies "plug-in hybrid" (PHEV), EVERY single vehicle you recommend MUST be a genuine plug-in hybrid available in Australia (e.g. BYD Sealion 6, Mitsubishi Outlander PHEV). NEVER suggest a conventional hybrid (like Toyota RAV4 Hybrid, Corolla Cross, or Camry) or petrol car!
+  - If they specify "electric" (EV), ONLY suggest pure battery electric vehicles (e.g. Tesla Model Y, BYD Atto 3, MG4).
+  - If they specify "7 seats", do not recommend 5-seaters without clear disclosure and 7-seat alternative.
+- NEVER drop, ignore, or contradict an established preference later in the conversation.
+
+---
+
+## SHORTLIST & COMPARISON PROTOCOL (NO BROAD REPETITIONS)
+When a customer gives you their criteria or asks what to consider:
+1. **Never repeat broad, generic suggestions or stall with open-ended questions** when you already have enough information to show real cars.
+2. **Present a Curated Shortlist of 2 to 3 Specific Australian Models**:
+   - Give the exact Make, Model, and Australian Variant/Badge (e.g., *BYD Sealion 6 Dynamic* or *Mitsubishi Outlander PHEV Aspire*).
+   - List key real-world figures: Pure EV battery range (in km), combined fuel economy (L/100km), drive layout (FWD or AWD), and seating.
+   - Provide an indicative Australian driveaway price bracket (e.g., ~$48k–$53k driveaway).
+   - State the #1 standout reason to choose that vehicle.
+3. **Provide a Meaningful Head-to-Head Comparison**:
+   - Compare the trade-offs directly in 2–3 sentences:
+     *e.g., "If pure electric daily driving range and cutting-edge cabin tech are your top priorities at a sharper price point, the **BYD Sealion 6** is hard to beat. However, if you need the peace of mind of mechanical AWD and the option for 7 seats, the **Mitsubishi Outlander PHEV** is the more versatile family workhorse."*
+4. **Focused Next Step**:
+   - Ask ONE clear, forward-moving question (e.g., "Between those two, do you lean more towards the tech and value of the Sealion 6, or the AWD versatility of the Outlander? We can check live dealer inventory and pricing on either.").
 
 ---
 
@@ -281,8 +339,9 @@ We may receive a commission or referral benefit if a customer proceeds with fina
 
 ---
 
-## VEHICLE CONVERSATION — natural, one/two questions at a time
+## VEHICLE CONVERSATION — natural, consultative flow
 Guide them through: new or used? → vehicle type/brand/model? → intended use (personal, business, fleet)? → budget? → features/lifestyle needs? → location/delivery? → timing?
+When key criteria are present, move directly into the Shortlist & Comparison protocol.
 
 ---
 
@@ -379,10 +438,8 @@ Encourage photos for trade valuations. Confirm receipt warmly; say a specialist 
 
 ---
 
-## Response Style
-- Short and conversational. 1–3 sentences most of the time.
-- One or two questions max per message.
-- Minimal markdown — light **bold** is fine; avoid heavy formatting.
+## Formatting Guidelines
+- Minimal markdown — light **bold** and clean bullet points for vehicle shortlists.
 - Never repeat the same disclaimer more than once in a conversation.
 - Never refer to yourself as an AI or language model.`;
 
@@ -457,11 +514,20 @@ const kbUpload = multer({
   }),
   limits: { fileSize: 20 * 1024 * 1024, files: 1 },
   fileFilter: (_req, file, cb) => {
-    const okTypes = ["application/pdf", "text/plain", "text/txt"];
-    const okExts = [".pdf", ".txt"];
+    const okTypes = [
+      "application/pdf",
+      "text/plain",
+      "text/txt",
+      "text/csv",
+      "application/json",
+      "text/markdown",
+      "text/x-markdown",
+      "application/vnd.ms-excel",
+    ];
+    const okExts = [".pdf", ".txt", ".csv", ".json", ".md"];
     const ext = path.extname(file.originalname || "").toLowerCase();
     if (okTypes.includes(file.mimetype) || okExts.includes(ext)) cb(null, true);
-    else cb(new Error("Only PDF and TXT files are accepted for the knowledge base."));
+    else cb(new Error("Accepted file types for knowledge base: PDF, TXT, CSV, JSON, and MD."));
   },
 });
 
@@ -513,6 +579,14 @@ function getOrCreateSession(incomingId, language) {
       language: validateLanguage(language),
       uploads: [],
       userTurns: 0,
+      buyerRequirements: {
+        fuelType: null,
+        vehicleType: null,
+        budget: null,
+        seating: null,
+        condition: null,
+        mustHaves: [],
+      },
       handoverRequested: false,
       handoverSubmitted: false,
       leadContact: null,
@@ -530,6 +604,124 @@ function getOrCreateSession(incomingId, language) {
 
 function recordUserTurn(session) {
   session.userTurns = (session.userTurns || 0) + 1;
+}
+
+function updateBuyerRequirements(session, message) {
+  if (!session) return;
+  if (!session.buyerRequirements) {
+    session.buyerRequirements = {
+      fuelType: null,
+      vehicleType: null,
+      budget: null,
+      seating: null,
+      condition: null,
+      mustHaves: [],
+    };
+  }
+  const req = session.buyerRequirements;
+  const text = String(message || "");
+  const lower = text.toLowerCase();
+
+  // ── Fuel type / Powertrain ───────────────────────────────────────────────
+  if (/\b(?:plug-in hybrid|phev|plug in hybrid|plug-in)\b/i.test(lower)) {
+    req.fuelType = "Plug-in Hybrid (PHEV)";
+  } else if (
+    /\b(?:all electric|pure electric|bev|battery electric|full electric)\b/i.test(lower) ||
+    (/\bev\b/i.test(lower) && !/\bphev\b/i.test(lower))
+  ) {
+    req.fuelType = "Electric (EV)";
+  } else if (/\bhybrid\b/i.test(lower) && !req.fuelType) {
+    req.fuelType = "Hybrid (HEV)";
+  } else if (/\bdiesel\b/i.test(lower) && !/\bhybrid\b/i.test(lower)) {
+    req.fuelType = "Diesel";
+  } else if (/\bpetrol\b/i.test(lower) && !/\bhybrid\b/i.test(lower)) {
+    req.fuelType = "Petrol";
+  }
+
+  // ── Vehicle type / Body style ─────────────────────────────────────────────
+  if (/\b(?:7|seven)[- ]?seat(?:er)?s?\b/i.test(lower)) {
+    req.seating = "7 seats";
+  } else if (/\b(?:5|five)[- ]?seat(?:er)?s?\b/i.test(lower)) {
+    req.seating = "5 seats";
+  } else if (/\b(?:8|eight)[- ]?seat(?:er)?s?\b/i.test(lower)) {
+    req.seating = "8 seats";
+  }
+
+  if (/\b(?:ute|dual[- ]?cab|pickup|cab[- ]?chassis)\b/i.test(lower)) {
+    req.vehicleType = "Ute / Dual-Cab";
+  } else if (/\bsuv\b/i.test(lower)) {
+    if (/\b(?:compact|small)\s+suv\b/i.test(lower)) req.vehicleType = "Small SUV";
+    else if (/\b(?:mid[- ]?size|medium)\s+suv\b/i.test(lower)) req.vehicleType = "Medium SUV";
+    else if (/\b(?:large|7[- ]?seat)\s+suv\b/i.test(lower)) req.vehicleType = "Large SUV";
+    else req.vehicleType = req.vehicleType || "SUV";
+  } else if (/\bhatchback|hatch\b/i.test(lower)) {
+    req.vehicleType = "Hatchback";
+  } else if (/\bsedan\b/i.test(lower)) {
+    req.vehicleType = "Sedan";
+  } else if (/\bpeople mover|van\b/i.test(lower)) {
+    req.vehicleType = "People Mover / Van";
+  }
+
+  // ── Budget ───────────────────────────────────────────────────────────────
+  const budgetMatch =
+    text.match(/\$(?:[0-9]{1,3},?[0-9]{3}|\d+k)\b/i) ||
+    text.match(/\b(?:under|budget(?:\s+is|\s+of)?|around|max(?:imum)?|up to)\s*(?:\$)?\s*([0-9]{2,3}(?:,?[0-9]{3})?|\d{2,3}k)\b/i);
+  if (budgetMatch) {
+    req.budget = budgetMatch[0].trim();
+  }
+
+  // ── Condition ────────────────────────────────────────────────────────────
+  if (/\b(?:brand new|new car|new vehicle)\b/i.test(lower)) {
+    req.condition = "New";
+  } else if (/\b(?:used|second[- ]?hand|pre[- ]?owned)\b/i.test(lower)) {
+    req.condition = "Used / Pre-owned";
+  } else if (/\bdemo|demonstrator\b/i.test(lower)) {
+    req.condition = "Demo";
+  }
+
+  // ── Features & Must-Haves ────────────────────────────────────────────────
+  if (/\bawd|all[- ]?wheel[- ]?drive|4x4|4wd\b/i.test(lower)) {
+    if (!req.mustHaves.includes("AWD/4x4")) req.mustHaves.push("AWD/4x4");
+  }
+  if (/\btow(?:ing)?\b/i.test(lower)) {
+    if (!req.mustHaves.includes("Towing capability")) req.mustHaves.push("Towing capability");
+  }
+  if (/\bleather\b/i.test(lower)) {
+    if (!req.mustHaves.includes("Leather interior")) req.mustHaves.push("Leather interior");
+  }
+  if (/\bsunroof|panoramic\b/i.test(lower)) {
+    if (!req.mustHaves.includes("Sunroof")) req.mustHaves.push("Sunroof");
+  }
+}
+
+function formatBuyerRequirementsBlock(session) {
+  if (!session || !session.buyerRequirements) return null;
+  const req = session.buyerRequirements;
+  const lines = [];
+
+  if (req.fuelType) {
+    lines.push(
+      `- Powertrain / Fuel Type: **${req.fuelType}** ${
+        req.fuelType.includes("Plug-in")
+          ? "(CRITICAL: Customer specifically requested a Plug-in Hybrid. You MUST ONLY recommend genuine Australian Plug-in Hybrid models, e.g. BYD Sealion 6, Mitsubishi Outlander PHEV, Eclipse Cross PHEV, MG HS Plus EV, etc. NEVER suggest regular non-plug-in hybrids or petrol cars!)"
+          : ""
+      }`
+    );
+  }
+  if (req.vehicleType) lines.push(`- Body Type: **${req.vehicleType}**`);
+  if (req.seating) lines.push(`- Seating Capacity: **${req.seating}**`);
+  if (req.budget) lines.push(`- Budget: **${req.budget}**`);
+  if (req.condition) lines.push(`- Condition: **${req.condition}**`);
+  if (req.mustHaves && req.mustHaves.length > 0)
+    lines.push(`- Key Requirements: **${req.mustHaves.join(", ")}**`);
+
+  if (lines.length === 0) return null;
+
+  return (
+    "## Active Customer Profile & Constraints (MANDATORY REQUIREMENT MEMORY):\n" +
+    lines.join("\n") +
+    "\n\n**STRICT ENFORCEMENT:** You MUST honor every constraint above in all vehicle recommendations, shortlists, and comparisons. If the customer requested a Plug-in Hybrid, you are strictly forbidden from suggesting standard petrol hybrids (like Toyota RAV4 Hybrid) or non-plug-in vehicles."
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -589,6 +781,15 @@ function extractNameFromAssistantReply(assistantText) {
 
 function extractVehicleInterest(session) {
   if (!session || !session.messages) return "Vehicle Enquiry";
+
+  // Check structured requirements first if captured
+  if (session.buyerRequirements) {
+    const req = session.buyerRequirements;
+    if (req.fuelType && req.vehicleType) {
+      return `${req.fuelType} ${req.vehicleType}${req.budget ? ` (${req.budget})` : ""}`;
+    }
+  }
+
   for (let i = session.messages.length - 1; i >= 0; i--) {
     const text = session.messages[i].content || "";
     const vMatch =
@@ -599,7 +800,7 @@ function extractVehicleInterest(session) {
         /(?:looking at the|considering the|enquiring about the|interested in)\s+([^?.!\n,]+)/i
       ) ||
       text.match(
-        /(?:Sealion\s?7|BYD\s?Sealion\s?7|AWD\s?Sealion\s?7|Toyota\s?[A-Za-z0-9]+|RAV4|Hilux|Corolla|Camry|Ford\s?Ranger|Mazda\s?CX-[0-9]+|Kia\s?[A-Za-z0-9]+|Hyundai\s?[A-Za-z0-9]+|Tesla\s?Model\s?[3YSE])/i
+        /(?:Sealion\s?[67]|BYD\s?Sealion\s?[67]|BYD\s?Shark(?:\s?6)?|Mitsubishi\s?Outlander(?:\s?PHEV)?|Eclipse\s?Cross(?:\s?PHEV)?|MG\s?HS(?:\s?Plus\s?EV)?|Kia\s?Sorento(?:\s?PHEV)?|Mazda\s?CX-[0-9]+|Toyota\s?[A-Za-z0-9]+|RAV4|Hilux|Corolla|Camry|Ford\s?Ranger|Kia\s?[A-Za-z0-9]+|Hyundai\s?[A-Za-z0-9]+|Tesla\s?Model\s?[3YSE])/i
       );
     if (vMatch) {
       let raw = vMatch[1] ? vMatch[1].trim() : vMatch[0].trim();
@@ -634,6 +835,12 @@ function detectFinanceReferralConsent(userMsg, lastAssistantMsg) {
  */
 async function getAssistantReply(session, language, { nudgeHandoff = false, isSms = false } = {}) {
   const llmMessages = [{ role: "system", content: SYSTEM_PROMPT }];
+
+  // ── Inject active buyer constraints block ───────────────────────────────
+  const buyerBlock = formatBuyerRequirementsBlock(session);
+  if (buyerBlock) {
+    llmMessages.push({ role: "system", content: buyerBlock });
+  }
 
   // ── Inject knowledge base from MongoDB ──────────────────────────────────
   const kbBlock = await buildKnowledgeBaseBlock();
@@ -681,7 +888,7 @@ async function getAssistantReply(session, language, { nudgeHandoff = false, isSm
   const completion = await openai.chat.completions.create({
     model: process.env.OPENAI_MODEL || "gpt-4o",
     messages: llmMessages,
-    max_tokens: isSms ? 300 : 700,
+    max_tokens: isSms ? 300 : 900,
     temperature: 0.6,
   });
 
@@ -992,6 +1199,7 @@ async function handleInboundSms(req, res) {
 
       session.messages.push({ role: "user", content: userText });
       recordUserTurn(session);
+      updateBuyerRequirements(session, userText);
 
       const shouldNudgeHandoff =
         !session.handoverRequested && session.userTurns >= MAX_USER_TURNS_BEFORE_HANDOFF;
@@ -1093,7 +1301,7 @@ app.post(
             source = "pdf";
           } else {
             text = extractTextFromTxt(filePath);
-            source = "txt";
+            source = ext ? ext.replace(".", "") : "txt";
           }
         } finally {
           fs.unlink(filePath, () => { });
@@ -1295,6 +1503,7 @@ app.post("/api/chat/message", async (req, res) => {
 
   session.messages.push({ role: "user", content: message });
   recordUserTurn(session);
+  updateBuyerRequirements(session, message);
 
   // ── Extract contact information if user provided details in this turn ──────
   const msgEmail = extractEmail(message);
