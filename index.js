@@ -158,6 +158,329 @@ const knowledgeEntrySchema = new mongoose.Schema(
 const KnowledgeEntry = mongoose.model("KnowledgeEntry", knowledgeEntrySchema);
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Built-in Knowledge Base: Tony White Group (TWG) + Autopact (AP) + BYD
+// ─────────────────────────────────────────────────────────────────────────────
+
+const BUILTIN_NETWORK_INDEX = `# Buy My Next Car: Tony White Group (TWG) + Autopact (AP) + BYD network index
+
+Condensed from "Full Network List and Developer Handover". Source-review date for all records: 2 Oct 2026 (some pages may be cached). Not a live-stock, price or spec check.
+
+## Rules for the AI (read first)
+- This is a brand/model/range index only. It does NOT establish live stock, prices, grades, engines, fuel use, towing, service intervals, safety ratings or discounts. A row is not necessarily a distinct grade or stock vehicle.
+- A group franchise listing is not a guarantee of commercial access, discount or availability. "Not verified" means not covered here, NOT unavailable in Australia.
+- Record IDs: 4-digit ref [0051] = BMNC-NET-0051. Never alter IDs, brand names or model names. Keep status and source with each answer.
+- Keep separate labels separate: Chevrolet (GMSV), GMC (GMSV), Isuzu UTE vs Isuzu Trucks, Mercedes-Benz vs Mercedes-Benz Trucks, Volvo Cars (no Volvo Trucks), Fiat Professional (vans only, no Fiat/Abarth cars). Do not infer one franchise from another.
+- "Check exact grade", "Not verified" = missing info. Never guess specs. Never invent prices.
+- New/demo/used condition, km, warranty start, price, availability need an actual dealer listing or quote. Do not calculate demo discounts.
+- Do not store customer info or private dealer terms in the shared knowledge base. Customer corrections are reviewed before becoming shared facts.
+- Cite recorded source IDs (register at the end) when stating network or range evidence.
+- Pre-release tests: BYD Sealion 7, Zeekr 7X, Toyota via TWG, GMSV via Autopact, an upcoming model, Holden as legacy, unknown grade.
+
+## Status codes
+- (no tag) = RANGE_LISTED (424 rows): in reviewed Australian range material; stock, grades, new-order availability still need confirming.
+- **A** = ANNOUNCED_OR_PREORDER (33): do not promise immediate supply.
+- **L** = LEGACY_OR_STOCK (35): earlier/runout; do not call current factory production.
+- **C** = CONFIRM_ORDER_STATUS (15): range page exists; local ordering needs dealer confirmation.
+
+Abbreviations: TWG = Tony White Group, AP = Autopact, NV = not verified in reviewed directories. "Src" = model range sources; TWG/AP sources are the franchise evidence.
+
+---
+## Passenger & light-commercial (45 labels, 462 entries)
+
+### Audi (12)
+TWG: Audi Bellbowrie | AP: Orange Audi
+A1[0001], A3[0002], A5[0003], A6[0004], e-tron GT[0005], Q2[0006], Q3[0007], Q4 e-tron[0008], Q5[0009], Q6 e-tron[0010], Q7[0011], Q8[0012]
+Src S012 | TWG S017 | AP S013
+
+### BMW (38 listed; see statuses)
+TWG: Albury BMW / Hobart BMW | AP: Coastline BMW
+Range: 1 Series[0013], 2 Series Coupe[0014], 2 Series Gran Coupe[0015], 3 Series Sedan[0016], 3 Series Touring[0017], 4 Series Convertible[0018], 4 Series Coupe[0019], 5 Series Sedan[0020], 7 Series[0021], i4[0024], i7[0026], iX[0027], iX1[0028], iX2[0029], iX3[0030], M2[0032], M3 Sedan[0033], M3 Touring[0034], M4 Convertible[0035], M4 Coupe[0036], M5 Sedan[0037], M5 Touring[0038], X1[0039], X2[0040], X3[0041], X5[0044], X5 M[0045], X6[0046], X6 M[0047], X7[0048], XM[0049]
+A: i3 Sedan[0023], iX5[0031]
+L: X4[0042], X4 M[0043], Z4[0050]
+C: 8 Series[0022], i5[0025]
+Src S019, S020 | TWG S068 | AP S014
+
+### BYD (16)
+TWG: NV | AP: Rockhampton BYD / Bathurst BYD / Dubbo BYD / Orange BYD
+Note: explicitly requested by Greg in addition to the two groups.
+Range: ATTO 1[0051], ATTO 2[0052], ATTO 2 DM-i[0053], ATTO 3 EVO[0055], DOLPHIN[0056], M9 Premium[0058], SEAL[0059], SEAL 6[0060], SEAL 6 Touring[0061], SEALION 5[0062], SEALION 6[0063], SEALION 7[0064], SEALION 8[0065], SHARK 6[0066]
+A: M9 Dynamic[0057] | L: ATTO 3[0054]
+Src S001, S002 | AP S014
+
+### Chery (11)
+TWG: Bellbowrie Chery | AP: Chery Noosa | Alias: Cherry (misspelling)
+Range: C5[0067], C5 Hybrid[0068], E5[0069], Tiggo 4[0071], Tiggo 4 Hybrid[0072], Tiggo 7[0073], Tiggo 7 Super Hybrid[0074], Tiggo 8 Pro Max[0075], Tiggo 8 Super Hybrid[0076], Tiggo 9 Super Hybrid[0077]
+A: Stockman[0070]
+Src S003 | TWG S017 | AP S014
+
+### Chevrolet (GMSV) (3)
+TWG: NV | AP: Cricks Highway GMSV | Alias: GMSV; Chevrolet
+Note: GMSV is the dealer channel; Chevrolet is the marque.
+Corvette[0078], Silverado 1500[0079], Silverado 2500 HD[0080]
+Src S035 | AP S014
+
+### Deepal (3)
+TWG: NV | AP: Cricks Highway Deepal / Deepal Maroochydore
+E07[0081], S05[0082], S07[0083]
+Src S024 | AP S014
+
+### Fiat Professional (2)
+TWG: NV | AP: Sunshine Coast Fiat Professional | Alias: Fiat vans
+Ducato[0084], Scudo[0085]
+Note: commercial-vehicle franchise only. Do not infer Fiat passenger or Abarth rights.
+Src S026 | AP S014
+
+### Ford (12)
+TWG: Blacklocks Ford | AP: Dubbo Ford / Bayford Ford
+E-Transit Custom[0086], Everest[0087], F-150[0088], Mustang[0089], Mustang Mach-E[0090], Ranger[0091], Ranger Hybrid[0092], Ranger Raptor[0093], Ranger Super Duty[0094], Tourneo[0095], Transit Custom[0096], Transit Van[0097]
+Src S027, S028 | TWG S018 | AP S013
+
+### Foton (2)
+TWG: NV | AP: Sunshine Coast Foton / Cricks Highway Foton | Alias: Foton LCV
+Tunland V7[0098], Tunland V9[0099]
+Note: light-commercial only; specialist truck distribution checked separately.
+Src S029 | AP S014
+
+### GAC (4)
+TWG: Bellbowrie GAC | AP: GAC Preston
+AION UT[0100], AION V[0101], EMZOOM[0102], M8[0103]
+Src S032 | TWG S017 | AP S016
+
+### Geely (3)
+TWG: Bellbowrie Geely | AP: Geely Ferntree Gully / Geely Lilydale
+EX2[0104], EX5[0105], Starray EM-i[0106]
+Src S033, S034 | TWG S017 | AP S016
+
+### GMC (GMSV) (1)
+TWG: NV | AP: Cricks Highway GMSV | Alias: GMC; GMSV
+Yukon[0107]
+Note: a GMSV franchise does not prove all GMC models are available; confirm model-specific authorisation.
+Src S035 | AP S014
+
+### GWM (12)
+TWG: Bellbowrie GWM | AP: Blackburn GWM / Cricks Highway GWM | Alias: Great Wall; Haval; Tank; Ora
+Range: Cannon[0108], Cannon Alpha[0109], Haval H6[0112], Haval H6GT[0113], Haval H7[0114], Haval Jolion[0115], Ora 5[0116], Tank 300[0117], Tank 500[0118]
+A: Cannon Alpha 3.0L Diesel[0110], Cannon PHEV[0111], Tank 500 3.0L Diesel[0119]
+Note: Haval, Tank, Ora are model lines under GWM, not separate franchises.
+Src S036 | TWG S017 | AP S016
+
+### Honda (7)
+TWG: Reef City Honda | AP: Caloundra City Honda / DC Motors Honda
+Accord[0120], Civic[0121], Civic Type R[0122], CR-V[0123], HR-V[0124], Prelude[0125], ZR-V[0126]
+Src S039 | TWG S064 | AP S014
+
+### Hyundai (28)
+TWG: Brighton Hyundai | AP: Ferntree Gully Hyundai / DC Motors Hyundai
+Range: ELEXIO[0127], i20 N[0128], i30 N[0129], i30 Sedan[0130], i30 Sedan Hybrid[0131], i30 Sedan N[0132], i30 Sedan N Line[0133], INSTER[0134], IONIQ 5[0135], IONIQ 5 N[0136], IONIQ 6 N[0137], IONIQ 9[0138], KONA[0139], KONA Electric[0140], KONA Hybrid[0141], MIGHTY Electric[0142], PALISADE Hybrid[0143], SANTA FE[0145], SANTA FE Hybrid[0146], SONATA N Line[0147], STARIA[0148], STARIA Load[0149], STARIA Load Hybrid[0150], STARIA Lounge[0151], TUCSON[0152], TUCSON Hybrid[0153], VENUE[0154]
+A: PALISADE XRT PRO[0144]
+Src S040 | TWG S021 | AP S016
+
+### Isuzu UTE (2)
+TWG: Blacklocks Isuzu UTE | AP: Keystar Isuzu UTE | Alias: Isuzu D-MAX; MU-X
+D-MAX[0155], MU-X[0156]
+Note: distinct from Isuzu Trucks.
+Src S042 | TWG S018 | AP S014
+
+### JAC (3)
+TWG: Blacklocks JAC | AP: Sunshine Coast JAC / Keystar JAC
+Hunter[0157], T9 Cab Chassis[0158], T9 Ute[0159]
+Src S009 | TWG S018 | AP S014
+
+### Jaecoo (7)
+TWG: Omoda Jaecoo Albury / Ferntree Gully | AP: Omoda Jaecoo Maroochydore
+Range: J5 EV[0160], J5 Petrol[0161], J7[0163], J7 SHS-P[0164], J8[0165], J8 SHS-P[0166]
+A: J5 SHS-H[0162]
+Src S059 | TWG S068 | AP S014
+
+### Jaguar (6)
+TWG: Trinity Jaguar | AP: NV
+All L: E-PACE[0167], F-PACE[0168], F-TYPE[0169], I-PACE[0170], XE[0171], XF[0172]
+Note: confirm new-order availability during brand transition.
+Src S044 | TWG S070
+
+### Jeep (4)
+TWG: Northern Jeep | AP: Keystar Jeep Redcliffe
+Range: Gladiator[0174], Wrangler[0176] | L: Avenger[0173] | C: Grand Cherokee[0175]
+Src S045 | TWG S058 | AP S014
+
+### KGM (6)
+TWG: Blacklocks SsangYong | AP: Cricks SsangYong Sunshine Coast | Alias: SsangYong
+Actyon[0177], Musso[0178], Musso EV[0179], Rexton[0180], Torres[0181], Torres EVX[0182]
+Note: some listings keep SsangYong name; preserve SsangYong identity for used vehicles.
+Src S010 | TWG S018 | AP S014
+
+### Kia (17 listed)
+TWG: Northern Kia / Mornington Kia | AP: Cricks Noosa Kia / Ferntree Gully Kia
+Range: Carnival[0183], EV3[0184], EV4[0185], EV5[0186], EV6[0187], EV9[0188], K4[0189], Picanto[0190], Seltos[0192], Sorento[0193], Sorento Hybrid[0194], Sportage[0195], Sportage Hybrid[0196], Stonic[0197], Tasman[0198], Tasman Cab Chassis[0199]
+C: PV5[0191]
+Src S049 | TWG S058 | AP S014
+
+### Land Rover (13)
+TWG: Bellbowrie Land Rover | AP: NV | Alias: Range Rover; Defender; Discovery
+Range: Defender 110[0200], Defender 130[0201], Defender 90[0202], Defender OCTA[0204], Discovery[0205], Range Rover[0207], Range Rover Evoque[0209], Range Rover Sport[0211], Range Rover Velar[0212]
+A: Range Rover Electric[0208], Range Rover GT[0210]
+C: Defender Hard Top[0203], Discovery Sport[0206]
+Src S046, S047, S063 | TWG S017
+
+### LDV (13)
+TWG: NV | AP: Rockhampton LDV / Bathurst LDV
+D90[0213], Deliver 7[0214], Deliver 9 Bus[0215], Deliver 9 Cab Chassis[0216], Deliver 9 Campervan[0217], Deliver 9 Motorhome[0218], Deliver 9 Van[0219], eDeliver 5[0220], eDeliver 7[0221], eDeliver 9[0222], G10+[0223], T60 MAX[0224], Terron 9[0225]
+Src S048 | AP S014
+
+### Leapmotor (7)
+TWG: Northern Leapmotor | AP: NV | Alias: Leepmotor (misspelling)
+Range: B05[0227], B10[0228], B10 Hybrid EV[0229], C10[0230], C10 Hybrid EV / REEV[0232]
+A: B03X[0226], C10 AWD Sports+[0231]
+Src S023 | TWG S058
+
+### Lepas (1)
+TWG: Lepas Cairns / Ferntree Gully Lepas | AP: NV
+A: L6 EV[0233]. Note: national launch/order status must be checked separately.
+Src S025 | TWG S068
+
+### Mazda (13)
+TWG: Burnie Mazda / Hobart Mazda | AP: Caloundra Mazda / Rockhampton Mazda
+BT-50[0234], CX-3[0235], CX-30[0236], CX-5[0237], CX-60[0238], CX-6e[0239], CX-70[0240], CX-80[0241], CX-90[0242], Mazda2[0243], Mazda3[0244], Mazda6e[0245], MX-5[0246]
+Src S050 | TWG S068 | AP S014
+
+### Mercedes-Benz (41 listed)
+TWG: Mercedes-Benz Cairns / West Orange Mercedes-Benz | AP: DC Motors Mercedes-Benz | Alias: Mercedes; AMG; Maybach
+Range: A-Class Hatchback[0247], C-Class Sedan[0249], CLA[0250], CLA Electric[0251], CLE Cabriolet[0252], CLE Coupe[0253], E-Class Sedan[0254], EQA[0255], EQB[0256], eSprinter Panel Van[0258], eVito Panel Van[0259], eVito Tourer[0260], G-Class[0261], G-Class Electric[0262], GLA[0263], GLB[0265], GLC[0267], GLC Coupe[0268], GLC Electric[0269], Mercedes-AMG GT Coupe[0274], Mercedes-Maybach S-Class[0276], Mercedes-Maybach SL[0277], SL Roadster[0279], Sprinter Cab Chassis[0280], Sprinter Dual Cab Chassis[0281], Sprinter Panel Van[0282], V-Class[0283], Vito Crew Cab[0284], Vito Panel Van[0285], Vito Tourer[0286]
+A: C-Class Electric[0248], EQS[0257], GLA Electric[0264], GLB Electric[0266], GLE[0270], GLE Coupe[0271], GLS[0272], Mercedes-AMG GT 4-Door Electric[0273], Mercedes-Maybach GLS[0275], S-Class[0278], VLE[0287]
+Note: cars and vans need the right dealership channel; trucks listed separately.
+Src S052, S053 | TWG S068 | AP S014
+
+### MG (14)
+TWG: Northern MG / Hobart MG | AP: Rockhampton MG
+Cyberster[0288], HS[0289], IM5[0290], IM6[0291], MG3[0292], MG4 EV[0293], MG4 EV Urban[0294], MG5[0295], MG7[0296], MGS5 EV[0297], MGS6 EV[0298], MGU9[0299], QS[0300], ZS[0301]
+Src S011 | TWG S058 | AP S014
+
+### MINI (7)
+TWG: Hobart MINI Garage | AP: Coastline MINI Garage
+Aceman[0302], Cooper 3-Door[0303], Cooper 5-Door[0304], Cooper Convertible[0305], Cooper Electric[0306], Countryman[0307], Countryman Electric[0308]
+Src S054 | TWG S068 | AP S014
+
+### Mitsubishi (9)
+TWG: Albion Park Mitsubishi | AP: Caloundra City Mitsubishi / Cricks Mitsubishi
+Range: ASX[0309], Eclipse Cross Plug-in Hybrid EV[0310], Outlander[0311], Outlander Plug-in Hybrid EV[0312], Pajero Sport[0314], Triton[0315], Triton Cab Chassis[0316], Triton Raider[0317]
+A: Pajero (all-new)[0313]
+Src S055, S056, S060 | TWG S068 | AP S014
+
+### Nissan (6)
+TWG: Bellbowrie Nissan | AP: Cricks Nambour Nissan / Blackburn Nissan
+ARIYA[0318], Navara[0319], Patrol[0320], QASHQAI[0321], X-TRAIL[0322], Z[0323]
+Src S057 | TWG S017 | AP S014
+
+### Omoda (1)
+TWG: Omoda Jaecoo Albury / Ferntree Gully | AP: Omoda Jaecoo Maroochydore
+9 SHS-P[0324]. Note: older Omoda 5 / E5 sold under Chery are not a separate Omoda franchise record.
+Src S059 | TWG S068 | AP S014
+
+### Peugeot (10)
+TWG: NV | AP: Gateway Peugeot
+2008 Hybrid[0325], 3008 Hybrid[0326], 308 Hybrid[0327], 408 Hybrid[0328], 5008 Hybrid[0329], Boxer[0330], E-Expert[0331], E-Partner[0332], Expert[0333], Partner[0334]
+Src S061 | AP S013
+
+### Porsche (7)
+TWG: Porsche Centre Hobart | AP: NV
+Range: 911[0336], Cayenne[0337], Cayenne Electric[0338], Macan Electric[0339], Panamera[0340], Taycan[0341] | L: 718[0335]
+Src S004-S008 | TWG S068
+
+### RAM (6)
+TWG: Northern RAM / Blacklocks RAM | AP: Caloundra City RAM / Cricks Nambour RAM | Alias: RAM Trucks
+Range: 1500 HEMI V8[0342], 1500 Hurricane[0343], 2500[0345], 3500[0346]
+A: 1500 Rumble Bee[0344], SRT TRX[0347]
+Src S062 | TWG S058 | AP S014
+
+### Renault (12)
+TWG: NV | AP: Cricks Highway Renault
+Range: Arkana Hybrid[0348], Duster[0349], Kangoo[0350], Kangoo E-Tech[0351], Koleos[0352], Master Van[0353], Master Van E-Tech[0354], Megane E-Tech[0355], Scenic E-Tech[0357], Symbioz[0358], Trafic[0359]
+A: Renault 5 Turbo 3E[0356]
+Src S065 | AP S014
+
+### Subaru (9)
+TWG: Trinity Subaru / Reef City Subaru | AP: Cricks Subaru / Keystar Subaru
+Range: BRZ[0360], Crosstrek[0361], Forester[0362], Impreza[0363], Outback[0364], Solterra[0365], Trailseeker[0366], WRX[0368]
+A: Uncharted[0367]
+Src S022 | TWG S070 | AP S014
+
+### Suzuki (8)
+TWG: Bellbowrie Suzuki / Blacklocks Suzuki | AP: Caloundra City Suzuki
+e VITARA[0369], Fronx Hybrid[0370], Ignis[0371], Jimny[0372], S-CROSS[0373], Swift Hybrid[0374], Swift Sport[0375], Vitara Hybrid[0376]
+Src S067 | TWG S017 | AP S014
+
+### Toyota (32)
+TWG: Illawarra Toyota / Launceston Toyota / Orange Toyota | AP: NV
+Range: bZ4X[0379], bZ4X Touring[0380], C-HR[0381], Camry[0382], Coaster[0383], Corolla Cross[0384], Corolla Hatch[0385], Corolla Sedan[0386], GR Corolla[0389], GR Yaris[0391], GR86[0392], HiAce[0394], HiLux[0395], Kluger[0397], LandCruiser 300[0399], LandCruiser 70[0400], LandCruiser Prado[0401], RAV4[0403], Tundra[0406], Yaris[0407], Yaris Cross[0408]
+L: 86[0377], Aurion[0378], FJ Cruiser[0387], Fortuner[0388], GR Supra[0390], Granvia[0393], HiLux GR Sport[0396], LandCruiser 200[0398], Prius[0402], Rukus[0404], Tarago[0405]
+Src S069 | TWG S068
+
+### Volkswagen (28)
+TWG: Ferntree Gully Volkswagen / Orange Volkswagen | AP: Cricks Volkswagen / Bayford Volkswagen | Alias: VW; VW Commercial Vehicles
+Range: Amarok[0409], Caddy[0411], Caddy California[0412], Caddy Cargo[0413], Crafter Cab Chassis[0414], Crafter Kampervan[0415], Crafter Van[0416], Golf[0417], Golf GTI[0418], Golf R[0419], ID. Buzz[0420], ID. Buzz Cargo[0421], ID.4[0422], ID.5[0423], Multivan[0424], Polo[0425], Polo GTI[0426], T-Cross[0427], T-Roc[0428], T-Roc R[0429], Tayron[0430], Tayron eHybrid[0431], Tiguan[0432], Tiguan eHybrid[0433], Touareg[0434], Touareg R[0435], Transporter[0436]
+A: Amarok W600 Walkinshaw[0410]
+Note: commercial vs passenger allocation varies by dealer.
+Src S071 | TWG S068 | AP S014
+
+### Volvo (8)
+TWG: Volvo Cars Hobart | AP: Volvo Cars Springwood | Alias: Volvo Cars
+Range: ES90[0437], EX30[0438], EX40[0439], EX90[0441], XC40[0442], XC60[0443], XC90[0444] | C: EX60[0440]
+Note: Volvo Cars only; no Volvo Trucks franchise inferred.
+Src S072 | TWG S068 | AP S014
+
+### XPeng (3)
+TWG: XPENG Brighton / Bellbowrie XPENG | AP: XPENG Sunshine Coast / Springwood
+Range: G6[0445] | A: G9[0446], X9[0447]
+Src S075 | TWG S017 | AP S014
+
+### Zeekr (3)
+TWG: NV | AP: Zeekr Sunshine Coast / Zeekr Cars Springwood | Alias: Zeeka (misspelling)
+009[0448], 7X[0449], X[0450]
+Src S074 | AP S014
+
+### Škoda (12)
+TWG: Bellbowrie Škoda | AP: Cricks Škoda Sunshine Coast | Alias: Skoda
+Elroq[0451], Enyaq[0452], Enyaq Coupe[0453], Fabia[0454], Kamiq[0455], Karoq[0456], Kodiaq[0457], Octavia[0458], Octavia Wagon[0459], Scala[0460], Superb[0461], Superb Wagon[0462]
+Src S066 | TWG S017 | AP S014
+
+---
+## Legacy / service (not a current range)
+
+### Holden (12, all L)
+TWG: Wilson Holden service / Brighton Holden service | AP: Bathurst Holden / Gateway Holden (service/legacy listings only)
+Acadia[0476], Astra Hatch[0477], Astra Sedan[0478], Astra Sportswagon[0479], Colorado[0480], Commodore Liftback[0481], Commodore Tourer[0482], Commodore Wagon[0483], Equinox[0484], Spark[0485], Trailblazer[0486], Trax[0487]
+Note: retired new-car marque; do not advertise new factory orders. Selected names only, not a full history.
+Src S038 | TWG S068 | AP S013
+
+---
+## Trucks & bus series (6 labels, 33 entries)
+Keep separate from passenger recommendations; confirm specialist dealership channel.
+
+- **Freightliner (2)**: TWG NV | AP: Daimler Trucks Sunshine Coast. Cascadia 116[0463], Cascadia 126[0464]. Src S030 | AP S015
+- **Fuso (6)**: TWG NV | AP: Daimler Trucks Sunshine Coast. Built Ready[0465], Canter[0466], eCanter[0467], Fighter[0468], Rosa[0469], Shogun[0470]. Src S031 | AP S015
+- **Hino (5)**: TWG: West Orange Motors Hino | AP NV. 300 Series[0471], 300 Series Hybrid Electric[0472], 500 Series[0473], 700 Series[0474], Built to Go[0475]. Src S037 | TWG S073
+- **Isuzu Trucks (5)**: TWG: Blacklocks Truck Centre | AP NV. F Series[0488], FX Series[0489], FY Series[0490], N Series[0491], Ready-to-Work[0492]. Not Isuzu UTE. Src S041 | TWG S018
+- **IVECO (7)**: TWG: Blacklocks Truck Centre | AP NV. ACCO[0493], Daily Cab Chassis[0494], Daily Motorhome[0495], Daily Van[0496], Eurocargo[0497], S-Way[0498], T-Way[0499]. Src S043 | TWG S018
+- **Mercedes-Benz Trucks (8, all C)**: TWG NV | AP: Daimler Trucks Sunshine Coast. Actros[0500], Actros ProCabin[0501], Arocs[0502], Atego[0503], eActros[0504], Econic[0505], eEconic[0506], Unimog[0507]. Src S051 | AP S015
+
+---
+## Motorcycle & powersports (directory only; no model records)
+Not part of the 507 vehicle entries. Confirm any specialist referral before offering it.
+- TWG: Blacklocks Motorcycles (src S018) for: Aprilia, Honda Motorcycles, Moto Guzzi, Piaggio, Polaris, Ural, Vespa. AP: NV for all of these.
+- BMW Motorrad: TWG Blacklocks Motorcycles (S018) | AP Coastline BMW Motorcycles (S014).
+
+---
+## Totals
+507 model/range entries (462 passenger/LCV + 33 truck/bus + 12 Holden), 60 network brand labels, 75 sources.
+
+## Source register (all reviewed 2 Oct 2026; shows range or relationship evidence, not live inventory)
+Model range: S001-S002 bydautomotive.com.au | S003 cherymotor.com.au | S004-S008 dealer.porsche.com | S009 elnjac.com.au | S010 kgm.com.au | S011 mgmotor.com.au | S012 audi.com.au | S019-S020 bmw.com.au | S022 crickssubaru.com.au | S023 csleapmotor.com.au | S024 deepal.com.au | S025 ferntreegullyautomotive.com.au | S026 fiat.com.au | S027-S028 ford.com.au | S029 fotonaustralia.com.au | S030 freightliner.com.au | S031 fuso.com.au | S032 gacgroup.com | S033 geelyessendon.com.au | S034 geelyliverpool.com.au | S035 gmspecialtyvehicles.com (Chevrolet and GMC GMSV) | S036 gwmanz.com | S037 hino.com.au | S038 holden.com.au | S039 honda.com.au | S040 hyundai.com | S041 isuzu.com.au (Trucks) | S042 isuzuute.com.au | S043 iveco.com | S044 jaguar.com | S045 jeep.com.au | S046-S047 landrover.com.au | S048 ldvautomotive.com.au | S049 lilydalekia.com.au | S050 mazda.com.au | S051 mercedes-benz-trucks.com | S052-S053 mercedes-benz.com.au | S054 mini.com.au | S055 mitsubishi-motors.com.au | S056 mitsubishi-motors.com | S057 nissan.com.au | S059 omodajaecoo.com.au (Jaecoo and Omoda) | S060 pacificmitsubishi.com.au | S061 peugeot.com.au | S062 ramtrucks.com.au | S063 rangerover.com | S065 renault.com.au | S066 skoda.com.au | S067 suzuki.com.au | S069 toyota.com.au | S071 volkswagen.com.au | S072 volvocars.com | S074 zeekrlife.com | S075 xpeng.com.au
+
+Tony White Group franchise evidence: S017 bellbowriemotors.com.au | S018 blacklocks.com.au | S021 brightonauto.com.au | S058 northernmotorgroup.com.au | S064 reefcitymotors.com.au | S068 tonywhitegroup.au | S070 trinityauto.com.au | S073 westorangemotors.com.au
+
+Autopact franchise evidence (all autopact.com.au): S013, S014, S015 (trucks), S016`;
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Knowledge-base helper functions
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -244,18 +567,19 @@ If a customer asks for ABN, ACN, legal name, phone or email, give these exact de
 This service exclusively supports the **Australian** new and used vehicle market.
 - NEVER mention overseas model names, US-only trims, or unavailable powertrains.
 - All pricing is in AUD (driveaway or RRP before on-roads).
-- All efficiency is in L/100km and electric range is in km (ADR / WLTP).
+- All efficiency is in L/100km and electric range is in km (tested under ADR 81/02 or WLTP test cycles).
 
 ### Common Overseas Hallucinations (DO NOT MENTION IN AUSTRALIA):
-- ❌ **Toyota RAV4 Prime (PHEV)**: DO NOT MENTION. It is NOT sold in Australia! Toyota Australia only sells the series-parallel RAV4 Hybrid (GX, GXL, XSE, Cruiser, Edge).
-- ❌ **Ford Escape / Escape PHEV**: DO NOT MENTION. Discontinued in Australia (Ford exited this segment in Australia).
-- ❌ **Hyundai Tucson PHEV / Santa Fe PHEV**: DO NOT MENTION. In Australia, Tucson and Santa Fe are sold as regular hybrids (HEV), petrol, or diesel, NOT plug-in hybrids.
-- ❌ **Kia Sportage PHEV**: DO NOT MENTION. In Australia, Sportage is petrol, diesel, or regular hybrid (HEV).
-- ❌ **Subaru Crosstrek / Forester PHEV**: DO NOT MENTION. In Australia, Subaru only sells mild hybrid (e-Boxer), no plug-in hybrid.
-- ❌ **Honda CR-V PHEV**: DO NOT MENTION. In Australia, CR-V is turbo petrol or e:HEV regular hybrid.
-- ❌ **US Trims (LE, XLE, SE, Limited, Platinum, Lariat)**: In Australia, trim names are GX, GXL, Cruiser, GT-Line, Aspire, Exceed, Dynamic, Premium, SR, SR5, Wildtrak, etc.
+-  **Toyota RAV4 Prime (PHEV)**: DO NOT MENTION. It is NOT sold in Australia! Toyota Australia only sells the series-parallel RAV4 Hybrid (GX, GXL, XSE, Cruiser, Edge).
+-  **Ford Escape / Escape PHEV**: DO NOT MENTION. Discontinued in Australia (Ford exited this segment in Australia).
+-  **Hyundai Tucson PHEV / Santa Fe PHEV**: DO NOT MENTION. In Australia, Tucson and Santa Fe are sold as regular hybrids (HEV), petrol, or diesel, NOT plug-in hybrids.
+-  **Kia Sportage PHEV**: DO NOT MENTION. In Australia, Sportage is petrol, diesel, or regular hybrid (HEV).
+-  **Subaru Crosstrek / Forester PHEV**: DO NOT MENTION. In Australia, Subaru only sells mild hybrid (e-Boxer), no plug-in hybrid.
+-  **Honda CR-V PHEV**: DO NOT MENTION. In Australia, CR-V is turbo petrol or e:HEV regular hybrid.
+-  **US Trims (LE, XLE, SE, Limited, Platinum, Lariat)**: In Australia, trim names are GX, GXL, Cruiser, GT-Line, Aspire, Exceed, Dynamic, Premium, SR, SR5, Wildtrak, etc.
 
 ### Australian Plug-in Hybrid (PHEV) Benchmark (True Australian Market Models):
+**INDICATIVE REFERENCE ONLY** — the prices, ranges and trims below are general guidance, NOT live pricing or live stock. Always present prices as indicative ("~") and say our specialists confirm current driveaway pricing and availability with the dealer.
 If a customer asks for a Plug-in Hybrid (PHEV), ONLY recommend models currently sold in Australia:
 1. **BYD Sealion 6** (Dynamic FWD ~$48,990 driveaway | Premium AWD ~$52,990 driveaway)
    - Segment: Mid-size 5-seat SUV
@@ -275,6 +599,17 @@ If a customer asks for a Plug-in Hybrid (PHEV), ONLY recommend models currently 
 8. **Cupra Formentor VZe / Leon VZe** (~$64,000 driveaway | ~50 km EV range, European performance styling).
 9. **Lexus NX 450h+ / RX 450h+** (~$90,000+ | Luxury Japanese PHEV).
 10. **BYD Shark 6 PHEV** (~$57,900 RRP / ~$60k driveaway | Dual-cab plug-in hybrid ute, ~100 km EV range, 2.5-tonne towing, 321kW AWD).
+
+### Knowledge Base Precedence & Status Codes (critical)
+- If a **Knowledge Base** section is provided, it OVERRIDES the benchmark list above wherever the two differ or the Knowledge Base covers the same brand/model. The benchmark list is only a fallback when the Knowledge Base is silent.
+- Never present a benchmark price as confirmed. If the Knowledge Base says it is not a price, stock or spec check, do not quote any price as live.
+- When the Knowledge Base tags a model with a status code, follow it:
+  - **A** (announced / pre-order): do NOT promise immediate supply; say it is announced or available to pre-order and our team will confirm timing.
+  - **L** (legacy / run-out stock): do NOT call it current factory production; say any remaining stock is run-out and our team will check what is available.
+  - **C** (confirm order status): say our team will confirm with the local dealer whether it can currently be ordered.
+  - No tag: it appears in the reviewed Australian range, but stock, grades and new-order availability are still confirmed by our team.
+- "Not verified" (NV) in the Knowledge Base means not covered by our records, NOT unavailable in Australia. Never guess specs or invent prices; say our specialists will confirm.
+- Keep brand labels separate as the Knowledge Base does (e.g. Isuzu UTE vs Isuzu Trucks, Mercedes-Benz vs Mercedes-Benz Trucks) and never infer one franchise from another.
 
 ---
 
@@ -304,15 +639,24 @@ When a customer gives you their criteria or asks what to consider:
 
 ---
 
+## Sourcing & Availability Enquiries (Strict Sourcing Protocol)
+When a customer asks what Australian source you are relying on, or how new vehicle availability is verified:
+- **Cite Concrete Manufacturer Sources**: State clearly that specifications, trims, and indicative pricing are referenced directly from official Australian manufacturer releases and importer catalogs (e.g., Mitsubishi Motors Australia for the Outlander PHEV, BYD Automotive Australia for the Sealion 6, MG Motor Australia for the HS PHEV).
+- **Explain Live Availability Verification**: Reiterate our core service and promise ("Instant conversation. Human-verified answers"): our vehicle specialists verify live showroom availability, current factory allocations, and driveaway pricing directly with authorized Australian franchised dealers before any deal is locked in.
+- **NEVER invent or claim "ADR certified vehicle listings"**: ADR (Australian Design Rules) approval is only a regulatory homologation standard for road compliance; it does NOT prove current new vehicle retail availability or dealer stock. Never cite ADR, ROVER, or RVCS compliance lists as a source for current showroom sales!
+
+---
+
 ## Wording You Must Not Use
-- ❌ "licensed finance broker" (when referring to Buy My Next Car) → ✅ "our finance specialists" / "our finance team"
-- ❌ "pre-approval in seconds" or any promised speed/outcome for finance → ✅ "an indicative assessment"
-- ❌ "soft credit check" or any description of the credit check type
-- ❌ "5-star ANCAP" or any specific ANCAP/safety rating for a vehicle
-- ❌ "100% protected", "guaranteed approval", or any absolute promise
-- ❌ "we provide finance", "our lenders", "we approve finance" (Buy My Next Car does NOT provide credit)
-- ❌ Any personalised interest rate, repayment figure, or loan amount
-- ❌ "best rate", "lowest repayment", "wholesale rate", "guaranteed saving"
+-  "licensed finance broker" (when referring to Buy My Next Car) →  "our finance specialists" / "our finance team"
+-  "pre-approval in seconds" or any promised speed/outcome for finance →  "an indicative assessment"
+-  "soft credit check" or any description of the credit check type
+-  "5-star ANCAP" or any specific ANCAP/safety rating for a vehicle
+-  "100% protected", "guaranteed approval", or any absolute promise
+-  "we provide finance", "our lenders", "we approve finance" (Buy My Next Car does NOT provide credit)
+-  Any personalised interest rate, repayment figure, or loan amount
+-  "best rate", "lowest repayment", "wholesale rate", "guaranteed saving"
+-  Do NOT claim that vehicles are "confirmed by the official Australian Design Rules (ADR) certified vehicle listings" or cite ADR/RVCS registers as proof of current showroom stock or new car availability.
 
 ---
 
@@ -701,10 +1045,9 @@ function formatBuyerRequirementsBlock(session) {
 
   if (req.fuelType) {
     lines.push(
-      `- Powertrain / Fuel Type: **${req.fuelType}** ${
-        req.fuelType.includes("Plug-in")
-          ? "(CRITICAL: Customer specifically requested a Plug-in Hybrid. You MUST ONLY recommend genuine Australian Plug-in Hybrid models, e.g. BYD Sealion 6, Mitsubishi Outlander PHEV, Eclipse Cross PHEV, MG HS Plus EV, etc. NEVER suggest regular non-plug-in hybrids or petrol cars!)"
-          : ""
+      `- Powertrain / Fuel Type: **${req.fuelType}** ${req.fuelType.includes("Plug-in")
+        ? "(CRITICAL: Customer specifically requested a Plug-in Hybrid. You MUST ONLY recommend genuine Australian Plug-in Hybrid models, e.g. BYD Sealion 6, Mitsubishi Outlander PHEV, Eclipse Cross PHEV, MG HS Plus EV, etc. NEVER suggest regular non-plug-in hybrids or petrol cars!)"
+        : ""
       }`
     );
   }
@@ -842,7 +1185,17 @@ async function getAssistantReply(session, language, { nudgeHandoff = false, isSm
     llmMessages.push({ role: "system", content: buyerBlock });
   }
 
-  // ── Inject knowledge base from MongoDB ──────────────────────────────────
+  // ── Inject built-in Network Index (Tony White Group + Autopact + BYD) ───
+  if (BUILTIN_NETWORK_INDEX && BUILTIN_NETWORK_INDEX.trim()) {
+    llmMessages.push({
+      role: "system",
+      content:
+        "## BMNC Network Index (Tony White Group + Autopact + BYD)\n\n" +
+        BUILTIN_NETWORK_INDEX.trim(),
+    });
+  }
+
+  // ── Inject dynamic knowledge base from MongoDB ──────────────────────────
   const kbBlock = await buildKnowledgeBaseBlock();
   if (kbBlock) {
     llmMessages.push({

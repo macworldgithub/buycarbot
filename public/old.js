@@ -15,9 +15,9 @@
 
   var datasetCfg = {};
   if (currentScript) {
-    datasetCfg.apiUrl          = currentScript.getAttribute("data-api-url") || undefined;
-    datasetCfg.autoOpen        = currentScript.getAttribute("data-auto-open") === "true";
-    datasetCfg.position        = currentScript.getAttribute("data-position") || "right";
+    datasetCfg.apiUrl = currentScript.getAttribute("data-api-url") || undefined;
+    datasetCfg.autoOpen = currentScript.getAttribute("data-auto-open") === "true";
+    datasetCfg.position = currentScript.getAttribute("data-position") || "right";
     datasetCfg.privacyPolicyUrl = currentScript.getAttribute("data-privacy-url") || undefined;
   }
 
@@ -37,25 +37,25 @@
     return;
   }
 
-  var SESSION_STORAGE_KEY    = "bmnc_chat_session_v1";
-  var MAX_PHOTOS_PER_UPLOAD  = 6;
-  var MAX_PHOTO_SIZE_BYTES   = 8 * 1024 * 1024; // 8MB
+  var SESSION_STORAGE_KEY = "bmnc_chat_session_v1";
+  var MAX_PHOTOS_PER_UPLOAD = 6;
+  var MAX_PHOTO_SIZE_BYTES = 8 * 1024 * 1024; // 8MB
 
   var TAGLINE = "Instant conversation. Human-verified answers.";
 
   var COMPANY = {
     tradingAs: "Buy My Next Car",
     legalName: "Test Drive Group Pty Ltd",
-    abn:       "51 679 064 343",
-    acn:       "679 064 343",
+    abn: "51 679 064 343",
+    acn: "679 064 343",
   };
 
   var FINANCE_PARTNER = {
-    legalName:  "Acquired Financial Services Pty Ltd",
-    tradingAs:  "Acquired Finance",
-    acl:        "488607",
-    phone:      "1300 235 255",
-    website:    "www.acquiredfinance.com",
+    legalName: "Acquired Financial Services Pty Ltd",
+    tradingAs: "Acquired Finance",
+    acl: "488607",
+    phone: "1300 235 255",
+    website: "www.acquiredfinance.com",
     lenderPanel: "63+",
   };
 
@@ -67,33 +67,33 @@
     "or referral benefit if I proceed with finance arranged by Acquired Financial Services.";
 
   var LANGUAGES = [
-    { code: "English",  label: "English",   flag: "🇦🇺" },
-    { code: "Mandarin", label: "中文",       flag: "🇨🇳" },
-    { code: "Arabic",   label: "العربية",    flag: "🇸🇦" },
-    { code: "Hindi",    label: "हिन्दी",      flag: "🇮🇳" },
+    { code: "English", label: "English", flag: "🇦🇺" },
+    { code: "Mandarin", label: "中文", flag: "🇨🇳" },
+    { code: "Arabic", label: "العربية", flag: "🇸🇦" },
+    { code: "Hindi", label: "हिन्दी", flag: "🇮🇳" },
   ];
 
   // ── State ──
   var state = {
-    open:             false,
-    sessionId:        null,
-    language:         null,
+    open: false,
+    sessionId: null,
+    language: null,
     showLanguageSelect: true,
-    messages:         [],
-    isLoading:        false,
-    isUploading:      false,
-    handoffRequired:  false,
+    messages: [],
+    isLoading: false,
+    isUploading: false,
+    handoffRequired: false,
     handoffSubmitted: false,
-    handoffCTAShown:  false,
-    screen:           "lang",
+    handoffCTAShown: false,
+    screen: "lang",
   };
 
   // ── Load fonts (idempotent) ──
   function ensureFonts() {
     if (document.getElementById("bmnc-fonts")) return;
     var link = document.createElement("link");
-    link.id   = "bmnc-fonts";
-    link.rel  = "stylesheet";
+    link.id = "bmnc-fonts";
+    link.rel = "stylesheet";
     link.href = "https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&display=swap";
     document.head.appendChild(link);
   }
@@ -107,27 +107,27 @@
       .replace(/>/g, "&gt;");
 
     escaped = escaped.replace(/^### (.*$)/gim, "<h3>$1</h3>");
-    escaped = escaped.replace(/^## (.*$)/gim,  "<h2>$1</h2>");
-    escaped = escaped.replace(/^# (.*$)/gim,   "<h1>$1</h1>");
+    escaped = escaped.replace(/^## (.*$)/gim, "<h2>$1</h2>");
+    escaped = escaped.replace(/^# (.*$)/gim, "<h1>$1</h1>");
     escaped = escaped.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
     escaped = escaped.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, "$1<em>$2</em>");
     escaped = escaped.replace(/`([^`]+)`/g, "<code>$1</code>");
 
-    var lines      = escaped.split("\n");
-    var html       = [];
+    var lines = escaped.split("\n");
+    var html = [];
     var listBuffer = [];
-    var listType   = null;
+    var listType = null;
 
     function flushList() {
       if (listBuffer.length === 0) return;
       var tag = listType === "ol" ? "ol" : "ul";
       html.push("<" + tag + ">" + listBuffer.join("") + "</" + tag + ">");
       listBuffer = [];
-      listType   = null;
+      listType = null;
     }
 
     for (var i = 0; i < lines.length; i++) {
-      var line        = lines[i];
+      var line = lines[i];
       var bulletMatch = line.match(/^\s*[-*]\s+(.*)/);
       var numberMatch = line.match(/^\s*\d+\.\s+(.*)/);
 
@@ -157,11 +157,11 @@
 
   // ── DOM builders ──
   function el(tag, opts) {
-    opts     = opts || {};
+    opts = opts || {};
     var node = document.createElement(tag);
     if (opts.className) node.className = opts.className;
-    if (opts.html  !== undefined) node.innerHTML   = opts.html;
-    if (opts.text  !== undefined) node.textContent = opts.text;
+    if (opts.html !== undefined) node.innerHTML = opts.html;
+    if (opts.text !== undefined) node.textContent = opts.text;
     if (opts.attrs) {
       for (var k in opts.attrs) node.setAttribute(k, opts.attrs[k]);
     }
@@ -198,7 +198,7 @@
 
   var launcher = el("button", {
     attrs: { id: "bmnc-launcher", "aria-label": "Open chat" },
-    html:  ICONS.chat + '<span class="bmnc-badge"></span>',
+    html: ICONS.chat + '<span class="bmnc-badge"></span>',
   });
 
   var win = el("div", {
@@ -206,11 +206,11 @@
   });
 
   // ── Header ──
-  var header       = el("div", { className: "bmnc-header" });
-  var headerLeft   = el("div", { className: "bmnc-header-left" });
-  var avatar       = el("div", { className: "bmnc-avatar", html: ICONS.bot });
+  var header = el("div", { className: "bmnc-header" });
+  var headerLeft = el("div", { className: "bmnc-header-left" });
+  var avatar = el("div", { className: "bmnc-avatar", html: ICONS.bot });
   var headerTitleWrap = el("div", { style: "min-width:0;" });
-  var headerTitle  = el("p", { className: "bmnc-header-title", text: "Buy My Next Car" });
+  var headerTitle = el("p", { className: "bmnc-header-title", text: "Buy My Next Car" });
   var headerStatus = el("p", { className: "bmnc-header-status", text: TAGLINE });
   headerTitleWrap.appendChild(headerTitle);
   headerTitleWrap.appendChild(headerStatus);
@@ -220,18 +220,18 @@
   var headerActions = el("div", { className: "bmnc-header-actions" });
   var specialistBtn = el("button", {
     className: "bmnc-icon-btn bmnc-hidden",
-    html:      ICONS.headset,
-    attrs:     { "aria-label": "Talk to a specialist", title: "Talk to a specialist" },
+    html: ICONS.headset,
+    attrs: { "aria-label": "Talk to a specialist", title: "Talk to a specialist" },
   });
   var resetBtn = el("button", {
     className: "bmnc-icon-btn",
-    html:      ICONS.reset,
-    attrs:     { "aria-label": "Start over", title: "Start over" },
+    html: ICONS.reset,
+    attrs: { "aria-label": "Start over", title: "Start over" },
   });
   var closeBtn = el("button", {
     className: "bmnc-icon-btn",
-    html:      ICONS.close,
-    attrs:     { "aria-label": "Close chat" },
+    html: ICONS.close,
+    attrs: { "aria-label": "Close chat" },
   });
   headerActions.appendChild(specialistBtn);
   headerActions.appendChild(resetBtn);
@@ -283,20 +283,20 @@
 
   var attachBtn = el("button", {
     className: "bmnc-icon-btn bmnc-attach-btn",
-    html:      ICONS.attach,
-    attrs:     { type: "button", "aria-label": "Attach photos", title: "Attach photos" },
+    html: ICONS.attach,
+    attrs: { type: "button", "aria-label": "Attach photos", title: "Attach photos" },
   });
   var fileInput = el("input", {
     attrs: { type: "file", accept: "image/*", multiple: "multiple", style: "display:none;" },
   });
   var inputEl = el("input", {
     className: "bmnc-input",
-    attrs:     { type: "text", placeholder: "Type your message...", "aria-label": "Message" },
+    attrs: { type: "text", placeholder: "Type your message...", "aria-label": "Message" },
   });
   var sendBtn = el("button", {
     className: "bmnc-send-btn",
-    html:      ICONS.send,
-    attrs:     { "aria-label": "Send message", disabled: "disabled" },
+    html: ICONS.send,
+    attrs: { "aria-label": "Send message", disabled: "disabled" },
   });
   inputRow.appendChild(attachBtn);
   inputRow.appendChild(fileInput);
@@ -376,22 +376,22 @@
       wrapEl.appendChild(el("label", { className: "bmnc-handover-label", text: labelText }));
       var input = isTextarea
         ? el("textarea", { className: "bmnc-handover-textarea", attrs: inputAttrs })
-        : el("input",    { className: "bmnc-handover-input",    attrs: inputAttrs });
+        : el("input", { className: "bmnc-handover-input", attrs: inputAttrs });
       wrapEl.appendChild(input);
       wrap.appendChild(wrapEl);
       return input;
     }
 
-    var nameInput  = field("Your name *",                { type: "text",  placeholder: "Jane Smith" });
-    var phoneInput = field("Phone",                      { type: "tel",   placeholder: "04xx xxx xxx" });
-    var emailInput = field("Email",                      { type: "email", placeholder: "jane@example.com" });
-    var notesInput = field("Anything else? (optional)",  { placeholder: "Best time to call, current vehicle, etc." }, true);
+    var nameInput = field("Your name *", { type: "text", placeholder: "Jane Smith" });
+    var phoneInput = field("Phone", { type: "tel", placeholder: "04xx xxx xxx" });
+    var emailInput = field("Email", { type: "email", placeholder: "jane@example.com" });
+    var notesInput = field("Anything else? (optional)", { placeholder: "Best time to call, current vehicle, etc." }, true);
 
     var errorEl = el("p", { className: "bmnc-handover-error" });
     wrap.appendChild(errorEl);
 
-    var actions   = el("div", { className: "bmnc-handover-actions" });
-    var backBtn   = el("button", { className: "bmnc-handover-back",   attrs: { type: "button" }, text: "Back" });
+    var actions = el("div", { className: "bmnc-handover-actions" });
+    var backBtn = el("button", { className: "bmnc-handover-back", attrs: { type: "button" }, text: "Back" });
     var submitBtn = el("button", { className: "bmnc-handover-submit", attrs: { type: "button" }, text: "Submit my details" });
     actions.appendChild(backBtn);
     actions.appendChild(submitBtn);
@@ -400,14 +400,14 @@
     wrap.appendChild(buildPrivacyNote());
 
     return {
-      el:         wrap,
-      nameInput:  nameInput,
+      el: wrap,
+      nameInput: nameInput,
       phoneInput: phoneInput,
       emailInput: emailInput,
       notesInput: notesInput,
-      errorEl:    errorEl,
-      backBtn:    backBtn,
-      submitBtn:  submitBtn,
+      errorEl: errorEl,
+      backBtn: backBtn,
+      submitBtn: submitBtn,
     };
   }
 
@@ -442,7 +442,7 @@
       FINANCE_PARTNER.tradingAs + ".";
     wrap.appendChild(disclosureBox);
 
-    var consentWrap  = el("div", { className: "bmnc-finance-consent-wrap" });
+    var consentWrap = el("div", { className: "bmnc-finance-consent-wrap" });
     var consentLabel = el("label", { className: "bmnc-finance-consent-label" });
     var consentCheck = el("input", {
       attrs: { type: "checkbox", id: "bmnc-finance-consent-check" },
@@ -466,9 +466,9 @@
       return input;
     }
 
-    var nameInput    = field("Your name *",  { type: "text", placeholder: "Jane Smith" });
-    var phoneInput   = field("Phone *",      { type: "tel",  placeholder: "04xx xxx xxx" });
-    var amountInput  = field("Borrowing Amount (optional)", {
+    var nameInput = field("Your name *", { type: "text", placeholder: "Jane Smith" });
+    var phoneInput = field("Phone *", { type: "tel", placeholder: "04xx xxx xxx" });
+    var amountInput = field("Borrowing Amount (optional)", {
       type: "text",
       placeholder: "e.g. $30,000",
     });
@@ -480,12 +480,12 @@
     var errorEl = el("p", { className: "bmnc-handover-error" });
     wrap.appendChild(errorEl);
 
-    var actions   = el("div", { className: "bmnc-handover-actions" });
-    var backBtn   = el("button", { className: "bmnc-handover-back",   attrs: { type: "button" }, text: "Back" });
+    var actions = el("div", { className: "bmnc-handover-actions" });
+    var backBtn = el("button", { className: "bmnc-handover-back", attrs: { type: "button" }, text: "Back" });
     var submitBtn = el("button", {
       className: "bmnc-handover-submit",
-      attrs:     { type: "button", disabled: "disabled" },
-      text:      "Refer me to Acquired Finance",
+      attrs: { type: "button", disabled: "disabled" },
+      text: "Refer me to Acquired Finance",
     });
     actions.appendChild(backBtn);
     actions.appendChild(submitBtn);
@@ -498,15 +498,15 @@
     wrap.appendChild(buildPrivacyNote());
 
     return {
-      el:           wrap,
+      el: wrap,
       consentCheck: consentCheck,
-      nameInput:    nameInput,
-      phoneInput:   phoneInput,
-      amountInput:  amountInput,
+      nameInput: nameInput,
+      phoneInput: phoneInput,
+      amountInput: amountInput,
       vehicleInput: vehicleInput,
-      errorEl:      errorEl,
-      backBtn:      backBtn,
-      submitBtn:    submitBtn,
+      errorEl: errorEl,
+      backBtn: backBtn,
+      submitBtn: submitBtn,
     };
   }
 
@@ -534,12 +534,12 @@
       localStorage.setItem(
         SESSION_STORAGE_KEY,
         JSON.stringify({
-          sessionId:        state.sessionId,
-          messages:         state.messages,
-          language:         state.language,
-          handoffRequired:  state.handoffRequired,
+          sessionId: state.sessionId,
+          messages: state.messages,
+          language: state.language,
+          handoffRequired: state.handoffRequired,
           handoffSubmitted: state.handoffSubmitted,
-          handoffCTAShown:  state.handoffCTAShown,
+          handoffCTAShown: state.handoffCTAShown,
         })
       );
     } catch (e) { /* localStorage unavailable */ }
@@ -551,13 +551,13 @@
       if (!saved) return;
       var parsed = JSON.parse(saved);
       if (parsed.sessionId && parsed.messages && parsed.messages.length > 0) {
-        state.sessionId        = parsed.sessionId;
-        state.messages         = parsed.messages;
-        state.language         = parsed.language || "English";
+        state.sessionId = parsed.sessionId;
+        state.messages = parsed.messages;
+        state.language = parsed.language || "English";
         state.showLanguageSelect = false;
-        state.handoffRequired  = !!parsed.handoffRequired;
+        state.handoffRequired = !!parsed.handoffRequired;
         state.handoffSubmitted = !!parsed.handoffSubmitted;
-        state.handoffCTAShown  = !!parsed.handoffCTAShown;
+        state.handoffCTAShown = !!parsed.handoffCTAShown;
         renderMessages();
         showChatScreen();
         if (state.handoffRequired && !state.handoffSubmitted && !state.handoffCTAShown) {
@@ -568,7 +568,7 @@
   }
 
   function clearSession() {
-    try { localStorage.removeItem(SESSION_STORAGE_KEY); } catch (e) {}
+    try { localStorage.removeItem(SESSION_STORAGE_KEY); } catch (e) { }
   }
 
   // ── Screen transitions ──
@@ -618,11 +618,11 @@
     financeScreen.el.classList.remove("bmnc-hidden");
     financeScreen.errorEl.classList.remove("bmnc-visible");
     financeScreen.consentCheck.checked = false;
-    financeScreen.submitBtn.disabled   = true;
-    financeScreen.nameInput.value      = "";
-    financeScreen.phoneInput.value     = "";
-    financeScreen.amountInput.value    = "";
-    financeScreen.vehicleInput.value   = "";
+    financeScreen.submitBtn.disabled = true;
+    financeScreen.nameInput.value = "";
+    financeScreen.phoneInput.value = "";
+    financeScreen.amountInput.value = "";
+    financeScreen.vehicleInput.value = "";
     state.screen = "finance";
     setTimeout(function () { financeScreen.nameInput.focus(); }, 150);
   }
@@ -665,8 +665,8 @@
     var row = el("div", { className: "bmnc-cta-row" });
     var btn = el("button", {
       className: "bmnc-cta-btn",
-      attrs:     { type: "button" },
-      html:      ICONS.headset + "<span>Share my details with the team</span>",
+      attrs: { type: "button" },
+      html: ICONS.headset + "<span>Share my details with the team</span>",
     });
     btn.addEventListener("click", showHandoverScreen);
     row.appendChild(btn);
@@ -680,8 +680,8 @@
     var row = el("div", { className: "bmnc-cta-row" });
     var btn = el("button", {
       className: "bmnc-cta-btn",
-      attrs:     { type: "button" },
-      html:      ICONS.finance + "<span>Compare finance options</span>",
+      attrs: { type: "button" },
+      html: ICONS.finance + "<span>Compare finance options</span>",
     });
     btn.addEventListener("click", showFinanceScreen);
     row.appendChild(btn);
@@ -735,10 +735,10 @@
   }
 
   function setLoading(loading) {
-    state.isLoading     = loading;
-    inputEl.disabled    = loading || state.isUploading;
+    state.isLoading = loading;
+    inputEl.disabled = loading || state.isUploading;
     inputEl.placeholder = loading ? "Thinking..." : "Type your message...";
-    attachBtn.disabled  = loading || state.isUploading;
+    attachBtn.disabled = loading || state.isUploading;
     updateSendEnabled();
     headerStatus.textContent = loading ? "Thinking..." : TAGLINE;
     if (loading) showTyping();
@@ -746,8 +746,8 @@
   }
 
   function setUploading(uploading) {
-    state.isUploading  = uploading;
-    inputEl.disabled   = uploading || state.isLoading;
+    state.isUploading = uploading;
+    inputEl.disabled = uploading || state.isLoading;
     attachBtn.disabled = uploading || state.isLoading;
     updateSendEnabled();
     if (uploading) {
@@ -761,7 +761,7 @@
 
   function handleHandoffFlags(data) {
     if (typeof data.handoffSubmitted === "boolean") state.handoffSubmitted = data.handoffSubmitted;
-    if (typeof data.handoffRequired  === "boolean") state.handoffRequired  = data.handoffRequired;
+    if (typeof data.handoffRequired === "boolean") state.handoffRequired = data.handoffRequired;
     if (state.handoffRequired && !state.handoffSubmitted && !state.handoffCTAShown) {
       appendHandoffCTA();
     }
@@ -776,12 +776,12 @@
     setLoading(true);
 
     fetch(CONFIG.apiUrl + "/api/chat/message", {
-      method:  "POST",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({
+      body: JSON.stringify({
         sessionId: state.sessionId || undefined,
-        message:   text,
-        language:  language || state.language || "English",
+        message: text,
+        language: language || state.language || "English",
       }),
     })
       .then(function (res) {
@@ -795,8 +795,8 @@
       .then(function (data) {
         if (data.sessionId) state.sessionId = data.sessionId;
         var assistantMsg = {
-          id:      "assistant-" + Date.now(),
-          role:    "assistant",
+          id: "assistant-" + Date.now(),
+          role: "assistant",
           content: data.message,
         };
         state.messages.push(assistantMsg);
@@ -810,8 +810,8 @@
         console.error("[BMNC Widget] Send failed:", err);
         setLoading(false);
         var errorMsg = {
-          id:      "error-" + Date.now(),
-          role:    "assistant",
+          id: "error-" + Date.now(),
+          role: "assistant",
           content: "We're having trouble connecting right now — please try again in a moment.",
         };
         state.messages.push(errorMsg);
@@ -844,12 +844,12 @@
 
     var formData = new FormData();
     formData.append("sessionId", state.sessionId || "");
-    formData.append("language",  state.language || "English");
+    formData.append("language", state.language || "English");
     accepted.forEach(function (f) { formData.append("photos", f, f.name); });
 
     var localMsg = {
-      id:      "user-upload-" + Date.now(),
-      role:    "user",
+      id: "user-upload-" + Date.now(),
+      role: "user",
       content: accepted.length === 1
         ? "📎 Uploaded 1 photo"
         : "📎 Uploaded " + accepted.length + " photos",
@@ -881,7 +881,7 @@
   }
 
   function submitHandover() {
-    var name  = handoverScreen.nameInput.value.trim();
+    var name = handoverScreen.nameInput.value.trim();
     var phone = handoverScreen.phoneInput.value.trim();
     var email = handoverScreen.emailInput.value.trim();
     var notes = handoverScreen.notesInput.value.trim();
@@ -891,18 +891,18 @@
       handoverScreen.errorEl.classList.add("bmnc-visible");
     }
 
-    if (!name)           { showFormError("Please add your name."); return; }
-    if (!phone && !email){ showFormError("Please add a phone number or email so we can reach you."); return; }
-    if (!state.sessionId){ showFormError("Let's chat for a moment first so we have some context to pass on."); return; }
+    if (!name) { showFormError("Please add your name."); return; }
+    if (!phone && !email) { showFormError("Please add a phone number or email so we can reach you."); return; }
+    if (!state.sessionId) { showFormError("Let's chat for a moment first so we have some context to pass on."); return; }
 
     handoverScreen.errorEl.classList.remove("bmnc-visible");
-    handoverScreen.submitBtn.disabled    = true;
+    handoverScreen.submitBtn.disabled = true;
     handoverScreen.submitBtn.textContent = "Submitting...";
 
     fetch(CONFIG.apiUrl + "/api/chat/handover", {
-      method:  "POST",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ sessionId: state.sessionId, name: name, phone: phone, email: email, notes: notes }),
+      body: JSON.stringify({ sessionId: state.sessionId, name: name, phone: phone, email: email, notes: notes }),
     })
       .then(function (res) {
         return res.json().then(function (body) {
@@ -912,17 +912,17 @@
       })
       .then(function (data) {
         state.handoffSubmitted = true;
-        state.handoffRequired  = true;
-        handoverScreen.submitBtn.disabled    = false;
+        state.handoffRequired = true;
+        handoverScreen.submitBtn.disabled = false;
         handoverScreen.submitBtn.textContent = "Submit my details";
-        handoverScreen.nameInput.value  = "";
+        handoverScreen.nameInput.value = "";
         handoverScreen.phoneInput.value = "";
         handoverScreen.emailInput.value = "";
         handoverScreen.notesInput.value = "";
         showChatScreen();
         var confirmMsg = {
-          id:      "assistant-handover-" + Date.now(),
-          role:    "assistant",
+          id: "assistant-handover-" + Date.now(),
+          role: "assistant",
           content: data.message || "Thanks — a specialist will be in touch shortly.",
         };
         state.messages.push(confirmMsg);
@@ -931,16 +931,16 @@
         saveSession();
       })
       .catch(function (err) {
-        handoverScreen.submitBtn.disabled    = false;
+        handoverScreen.submitBtn.disabled = false;
         handoverScreen.submitBtn.textContent = "Submit my details";
         showFormError(err.message || "Something went wrong — please try again.");
       });
   }
 
   function submitFinanceReferral() {
-    var name    = financeScreen.nameInput.value.trim();
-    var phone   = financeScreen.phoneInput.value.trim();
-    var amount  = financeScreen.amountInput.value.trim();
+    var name = financeScreen.nameInput.value.trim();
+    var phone = financeScreen.phoneInput.value.trim();
+    var amount = financeScreen.amountInput.value.trim();
     var vehicle = financeScreen.vehicleInput.value.trim();
 
     function showFormError(msg) {
@@ -949,12 +949,12 @@
     }
 
     if (!financeScreen.consentCheck.checked) { showFormError("Please tick the consent box to proceed."); return; }
-    if (!name)                               { showFormError("Please add your name."); return; }
-    if (!phone)                              { showFormError("Please add your phone number."); return; }
-    if (!state.sessionId)                    { showFormError("Let's chat for a moment first so we have some context to pass on."); return; }
+    if (!name) { showFormError("Please add your name."); return; }
+    if (!phone) { showFormError("Please add your phone number."); return; }
+    if (!state.sessionId) { showFormError("Let's chat for a moment first so we have some context to pass on."); return; }
 
     financeScreen.errorEl.classList.remove("bmnc-visible");
-    financeScreen.submitBtn.disabled    = true;
+    financeScreen.submitBtn.disabled = true;
     financeScreen.submitBtn.textContent = "Submitting...";
 
     var notes =
@@ -966,14 +966,14 @@
       FINANCE_PARTNER.acl + ").";
 
     fetch(CONFIG.apiUrl + "/api/chat/handover", {
-      method:  "POST",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({
+      body: JSON.stringify({
         sessionId: state.sessionId,
-        name:      name,
-        phone:     phone,
-        email:     "",
-        notes:     notes,
+        name: name,
+        phone: phone,
+        email: "",
+        notes: notes,
       }),
     })
       .then(function (res) {
@@ -983,14 +983,14 @@
         });
       })
       .then(function () {
-        financeScreen.submitBtn.disabled    = false;
+        financeScreen.submitBtn.disabled = false;
         financeScreen.submitBtn.textContent = "Refer me to Acquired Finance";
         showChatScreen();
         var confirmMsg = {
-          id:      "assistant-finance-" + Date.now(),
-          role:    "assistant",
+          id: "assistant-finance-" + Date.now(),
+          role: "assistant",
           content:
-            "✅ Done — your details have been passed to Acquired Finance. " +
+            " Done — your details have been passed to Acquired Finance. " +
             "One of their licensed brokers will be in touch to discuss your options. " +
             "The initial call is obligation-free, and they'll explain available rates and repayments based on your circumstances.",
         };
@@ -1000,14 +1000,14 @@
         saveSession();
       })
       .catch(function (err) {
-        financeScreen.submitBtn.disabled    = false;
+        financeScreen.submitBtn.disabled = false;
         financeScreen.submitBtn.textContent = "Refer me to Acquired Finance";
         showFormError(err.message || "Something went wrong — please try again.");
       });
   }
 
   function selectLanguage(langCode) {
-    state.language           = langCode;
+    state.language = langCode;
     state.showLanguageSelect = false;
     showChatScreen();
 
@@ -1023,19 +1023,19 @@
     var sid = state.sessionId;
     if (sid) {
       fetch(CONFIG.apiUrl + "/api/chat/reset", {
-        method:  "POST",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ sessionId: sid }),
-      }).catch(function () {});
+        body: JSON.stringify({ sessionId: sid }),
+      }).catch(function () { });
     }
-    state.messages          = [];
-    state.sessionId         = null;
-    state.language          = null;
+    state.messages = [];
+    state.sessionId = null;
+    state.language = null;
     state.showLanguageSelect = true;
-    state.handoffRequired   = false;
-    state.handoffSubmitted  = false;
-    state.handoffCTAShown   = false;
-    messagesEl.innerHTML    = "";
+    state.handoffRequired = false;
+    state.handoffSubmitted = false;
+    state.handoffCTAShown = false;
+    messagesEl.innerHTML = "";
     clearSession();
     showLangScreen();
   }
@@ -1067,10 +1067,10 @@
   resetBtn.addEventListener("click", resetConversation);
   specialistBtn.addEventListener("click", showHandoverScreen);
 
-  handoverScreen.backBtn.addEventListener("click",   hideHandoverScreen);
+  handoverScreen.backBtn.addEventListener("click", hideHandoverScreen);
   handoverScreen.submitBtn.addEventListener("click", submitHandover);
 
-  financeScreen.backBtn.addEventListener("click",   hideFinanceScreen);
+  financeScreen.backBtn.addEventListener("click", hideFinanceScreen);
   financeScreen.submitBtn.addEventListener("click", submitFinanceReferral);
 
   inputEl.addEventListener("input", updateSendEnabled);
@@ -1091,8 +1091,8 @@
   function handleSend() {
     var text = inputEl.value.trim();
     if (!text || state.isLoading || state.isUploading) return;
-    inputEl.value      = "";
-    sendBtn.disabled   = true;
+    inputEl.value = "";
+    sendBtn.disabled = true;
     sendMessage(text);
   }
 
@@ -1108,12 +1108,12 @@
 
   // ── Public API ──
   window.BMNCWidget = {
-    open:             openWidget,
-    close:            closeWidget,
-    toggle:           toggleWidget,
-    reset:            resetConversation,
+    open: openWidget,
+    close: closeWidget,
+    toggle: toggleWidget,
+    reset: resetConversation,
     talkToSpecialist: showHandoverScreen,
-    compareFinance:   showFinanceScreen,
+    compareFinance: showFinanceScreen,
     appendFinanceCTA: appendFinanceCTA,
   };
 
