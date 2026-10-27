@@ -1840,7 +1840,7 @@ app.get("/health", async (_req, res) => {
 /**
  * POST /api/chat/message
  * Body: { sessionId?: string, message: string, language?: string }
- * Returns: { sessionId, message, conversationLength, handoffRequired, handoffSubmitted }
+ * Returns: { sessionId, message, conversationLength, handoffRequired, handoffSubmitted, leadCaptured }
  */
 app.post("/api/chat/message", async (req, res) => {
   const { sessionId: incomingSessionId, message, language: rawLanguage } = req.body;
@@ -1978,6 +1978,7 @@ app.post("/api/chat/message", async (req, res) => {
     conversationLength: session.messages.length,
     handoffRequired: session.handoverRequested,
     handoffSubmitted: session.handoverSubmitted,
+    leadCaptured: !!(session.leadContact && (session.leadContact.email || session.leadContact.phone)),
   });
 });
 

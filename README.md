@@ -65,6 +65,15 @@ Shopify, Webflow, anywhere that allows custom code):
 
 That's it — a floating chat launcher appears in the bottom-right corner.
 
+### Marketing and lead tracking
+
+The widget emits GTM data-layer events for icon openings, deduplicated tab-session
+openings, successful conversation starts, and captured contact enquiries. See the
+[marketing team setup and reporting guide](docs/marketing-chat-tracking.md) for
+GA4 configuration, Google Ads conversions, validation, and a message to forward
+to the team. Deploy the widget and backend together; GTM/GA4 setup is required
+before events appear in analytics reports.
+
 ### Configuration options
 
 Set as attributes on the `<script>` tag:

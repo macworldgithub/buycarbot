@@ -20,6 +20,7 @@
     datasetCfg.position = currentScript.getAttribute("data-position") || "right";
     datasetCfg.privacyPolicyUrl = currentScript.getAttribute("data-privacy-url") || undefined;
     datasetCfg.financeInfoUrl = currentScript.getAttribute("data-finance-info-url") || undefined;
+    datasetCfg.trackingEnabled = currentScript.getAttribute("data-tracking-enabled") !== "false";
   }
 
   var userCfg =
@@ -46,6 +47,7 @@
     apiUrl: (userCfg.apiUrl || datasetCfg.apiUrl || scriptOrigin || defaultOrigin).replace(/\/$/, ""),
     autoOpen: userCfg.autoOpen !== undefined ? userCfg.autoOpen : !!datasetCfg.autoOpen,
     position: userCfg.position || datasetCfg.position || "right",
+    trackingEnabled: userCfg.trackingEnabled !== undefined ? userCfg.trackingEnabled : datasetCfg.trackingEnabled !== false,
     privacyPolicyUrl: userCfg.privacyPolicyUrl || datasetCfg.privacyPolicyUrl || "https://lightgrey-hyena-663829.hostingersite.com/privacy-policy/",
     // URL for the Finance Referral Information page — set via data-finance-info-url or BMNC_CONFIG
     financeInfoUrl: userCfg.financeInfoUrl || datasetCfg.financeInfoUrl || "/finance-referral-information",
@@ -112,6 +114,45 @@
     financeCardShown: false,
     screen: "lang",
   };
+
+  // Marketing events are consumed by the host site's Tag Manager container.
+  // Never include contact details, chat text, URLs or conversation IDs here.
+  var trackedInMemory = {};
+
+  function trackEvent(name, method) {
+    if (!CONFIG.trackingEnabled) return false;
+    try {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: name,
+        widget_name: "bmnc_chat",
+        interaction_source: method === "launcher" ? "launcher" : "conversation",
+        lead_method: name === "bmnc_lead_captured" ? method : "",
+      });
+      return true;
+    } catch (_e) {
+      // A blocked or broken analytics integration must never interrupt chat.
+      return false;
+    }
+  }
+
+  function trackOnce(name, scope, storageName, method) {
+    if (!CONFIG.trackingEnabled || !scope) return;
+    var key = "bmnc_tracking_v1:" + name + ":" + scope;
+    if (trackedInMemory[key]) return;
+    var storage;
+    try {
+      storage = window[storageName];
+      if (storage.getItem(key)) return;
+    } catch (_e) { /* Storage unavailable: deduplicate for this page only. */ }
+    if (!trackEvent(name, method)) return;
+    trackedInMemory[key] = true;
+    try { if (storage) storage.setItem(key, "1"); } catch (_e) { }
+  }
+
+  function trackLead(method) {
+    trackOnce("bmnc_lead_captured", state.sessionId, "localStorage", method);
+  }
 
   // ── Load fonts (idempotent) ──
   function ensureFonts() {
@@ -1088,6 +1129,8 @@
       })
       .then(function (data) {
         if (data.sessionId) state.sessionId = data.sessionId;
+        trackOnce("bmnc_chat_started", state.sessionId, "localStorage", "conversation");
+        if (data.leadCaptured === true) trackLead("conversation");
 
         // ── Conversational chat rendering ──
         // Do NOT auto-inject inline finance cards or strip content from the AI reply.
@@ -1230,6 +1273,7 @@
         });
       })
       .then(function (data) {
+        if (data.success === true) trackLead("handover");
         state.handoffSubmitted = true;
         state.handoffRequired = true;
         handoverScreen.submitBtn.disabled = false;
@@ -1302,7 +1346,8 @@
           return body;
         });
       })
-      .then(function () {
+      .then(function (data) {
+        if (data.success === true) trackLead("finance_referral");
         financeScreen.submitBtn.disabled = false;
         financeScreen.submitBtn.textContent = "Refer me to Acquired Finance";
         showChatScreen();
@@ -1383,7 +1428,13 @@
   }
 
   // ── Event wiring ──
-  launcher.addEventListener("click", toggleWidget);
+  launcher.addEventListener("click", function () {
+    if (!state.open) {
+      trackEvent("bmnc_chat_open", "launcher");
+      trackOnce("bmnc_chat_open_unique", "tab", "sessionStorage", "launcher");
+    }
+    toggleWidget();
+  });
   closeBtn.addEventListener("click", closeWidget);
   resetBtn.addEventListener("click", resetConversation);
   specialistBtn.addEventListener("click", showHandoverScreen);
